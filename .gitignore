@@ -52,4 +52,13 @@ docs/_build/
 
 # PyBuilder
 target/
-data/
+
+# Custom
+data/food100
+data/food-101
+*.swp
+*.swo
+*.pkl
+*~
+
+
