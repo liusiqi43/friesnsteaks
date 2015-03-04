@@ -1,0 +1,6 @@
+!obj:friesnsteaks.datasets.food100.FOOD100 {
+        which_set: 'train',
+        start: 0,
+        stop: 5
+}
+
