@@ -37,10 +37,14 @@ def reclassify():
         example_count[key] = len(fnames) 
         reclassified[key] = fnames
 
-    # pprint(example_count)
-    print '{} classes, with an average of {} examples per class.'.format(len(reclassified), sum(example_count.values())/len(reclassified))
-    print 'A total of {} examples.'.format(sum(example_count.values()))
+    image_to_labels = {}
+    for label, images in reclassified.iteritems():
+        for img in images:
+            if image_to_labels.has_key(img):
+                image_to_labels[img].append(label)
+            else:
+                image_to_labels[img] = [label]
 
     # Use reclassified as training set for each class:
     # ex: reclassified['spaghetti'] = ['img_27_xx', ... , 'img_84_xx']
-    return reclassified, example_count
+    return image_to_labels, reclassified, example_count
