@@ -47,7 +47,7 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
     """
 
     def __init__(self, which_set, center=False, rescale=False, gcn=None,
-                 start=None, stop=None, axes=('b', 0, 1, 'c'),
+                 start=None, stop=None, axes=('b', 'c', 0, 1),
                  toronto_prepro = False, preprocessor = None):
         # note: there is no such thing as the cifar10 validation set;
         # pylearn1 defined one but really it should be user-configurable
@@ -58,15 +58,16 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
 
         _logger.info('{} classes, with an average of {} examples per class.'.format(len(reclassified), sum(instance_count.values())/len(reclassified)))
         _logger.info('A total of {} examples.'.format(sum(instance_count.values())))
-        ninstances = sum(instance_count.values())
+        ninstances = stop - start if start is not None else sum(instance_count.values())
 
         # we define here:
         dtype = 'uint8'
         ntrain = ninstances * .8
         ntest = ninstances * .2
+        print 'ntrain = %d, ntest = %f' % (ntrain, ntest)
 
         # we also expose the following details:
-        self.img_shape = (3, 128, 128)
+        self.img_shape = (128, 3, 128)
         self.img_size = numpy.prod(self.img_shape)
         self.n_classes = len(reclassified)
 
@@ -80,17 +81,27 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         x = numpy.zeros((ninstances, self.img_size), dtype=dtype)
         # k-hot encoding
         y = numpy.zeros((ninstances, self.n_classes), dtype=dtype)
+
+        data = numpy.zeros((ninstances, self.img_size+self.n_classes), dtype=dtype)
          
         # load data
         i = 0
         for image, labels in image_to_labels.iteritems():
             img = Image.open(os.path.join(datapath, image)).convert('RGB')
-            data = numpy.asarray(img).reshape(1, self.img_size)
-            x[i] = data
+            img_row = numpy.asarray(img).flatten()
+            data[i][:self.img_size] = img_row 
             for label in labels:
-                y[i][self.label_names.index(label)] = 1
+                data[i][self.img_size+self.label_names.index(label)] = 1
             i = i+1
+            if i == ninstances:
+                break
 
+        # Randomize all instances
+        numpy.random.shuffle(data)
+
+        x = data[:, :self.img_size]
+        y = data[:, self.img_size:]
+        
         # process this data
         Xs = {'train': x[0:ntrain],
               'test': x[ntrain:ntrain+ntest]}
@@ -130,21 +141,13 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
             gcn = float(gcn)
             X = global_contrast_normalize(X, scale=gcn)
 
-        if start is not None:
-            # This needs to come after the prepro so that it doesn't
-            # change the pixel means computed above for toronto_prepro
-            assert start >= 0
-            assert stop > start
-            assert stop <= X.shape[0]
-            X = X[start:stop, :]
-            y = y[start:stop, :]
-            assert X.shape[0] == y.shape[0]
-
         if which_set == 'test':
-            assert X.shape[0] == 10000
+            print X.shape
+            assert X.shape[0] == ntest 
 
-        view_converter = dense_design_matrix.DefaultViewConverter((128, 128, 3),
-                                                                  axes)
+
+        view_converter = dense_design_matrix.DefaultViewConverter(self.img_shape,
+                                                                  self.axes)
 
         super(FOOD100, self).__init__(X=X, y=y, view_converter=view_converter,
                                       y_labels=self.n_classes)
