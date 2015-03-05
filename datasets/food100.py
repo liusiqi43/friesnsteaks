@@ -7,6 +7,7 @@ import os
 import logging
 
 import numpy
+import random
 from theano.compat.six.moves import xrange
 
 from PIL import Image
@@ -47,7 +48,7 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
     """
 
     def __init__(self, which_set, center=False, rescale=False, gcn=None,
-                 start=None, stop=None, axes=('b', 'c', 0, 1),
+                 start=None, stop=None, axes=('b', 0, 1, 'c'),
                  toronto_prepro = False, preprocessor = None):
         # note: there is no such thing as the cifar10 validation set;
         # pylearn1 defined one but really it should be user-configurable
@@ -56,9 +57,14 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         self.axes = axes
         image_to_labels, reclassified, instance_count = reclassify()
 
+
         _logger.info('{} classes, with an average of {} examples per class.'.format(len(reclassified), sum(instance_count.values())/len(reclassified)))
         _logger.info('A total of {} examples.'.format(sum(instance_count.values())))
         ninstances = stop - start if start is not None else sum(instance_count.values())
+
+        def dimshuffle(bc01):
+            default = ('b', 0, 1, 'c')
+            return bc01.transpose(*[default.index(axis) for axis in axes])
 
         # we define here:
         dtype = 'uint8'
@@ -67,41 +73,44 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         print 'ntrain = %d, ntest = %f' % (ntrain, ntest)
 
         # we also expose the following details:
-        self.img_shape = (128, 3, 128)
+        self.img_shape = (128, 128, 3)
         self.img_size = numpy.prod(self.img_shape)
         self.n_classes = len(reclassified)
 
-        self.label_names = reclassified.keys() 
+        self.label_names = reclassified.keys()
 
         # prepare loading
         datapath = os.path.join(
             string_utils.preprocess('${PYLEARN2_DATA_PATH}'),
             'food100', 'output_resized')
 
-        x = numpy.zeros((ninstances, self.img_size), dtype=dtype)
         # k-hot encoding
+        x = numpy.zeros((ninstances, self.img_size), dtype=dtype)
         y = numpy.zeros((ninstances, self.n_classes), dtype=dtype)
 
-        data = numpy.zeros((ninstances, self.img_size+self.n_classes), dtype=dtype)
-         
+        data = numpy.zeros((ninstances, self.img_shape[0], \
+                            self.img_shape[1], self.img_shape[2]), dtype=dtype)
+
         # load data
         i = 0
-        for image, labels in image_to_labels.iteritems():
+        # randomize data
+        images = image_to_labels.keys()
+        random.shuffle(images)
+        for image in images:
             img = Image.open(os.path.join(datapath, image)).convert('RGB')
-            img_row = numpy.asarray(img).flatten()
-            data[i][:self.img_size] = img_row 
-            for label in labels:
-                data[i][self.img_size+self.label_names.index(label)] = 1
+            data[i] = numpy.asarray(img.rotate(90))
+            for label in image_to_labels[image]:
+                y[i][self.label_names.index(label)] = 1
             i = i+1
             if i == ninstances:
                 break
 
-        # Randomize all instances
-        numpy.random.shuffle(data)
+        dimshuffle(data)
 
-        x = data[:, :self.img_size]
-        y = data[:, self.img_size:]
-        
+        for i in xrange(ninstances):
+            x[i] = data[i].flatten('F')
+
+        print x
         # process this data
         Xs = {'train': x[0:ntrain],
               'test': x[ntrain:ntrain+ntest]}
@@ -142,8 +151,7 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
             X = global_contrast_normalize(X, scale=gcn)
 
         if which_set == 'test':
-            print X.shape
-            assert X.shape[0] == ntest 
+            assert X.shape[0] == ntest
 
 
         view_converter = dense_design_matrix.DefaultViewConverter(self.img_shape,
@@ -249,3 +257,4 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
                        rescale=self.rescale, gcn=self.gcn,
                        toronto_prepro=self.toronto_prepro,
                        axes=self.axes)
+
