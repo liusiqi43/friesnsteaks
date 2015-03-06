@@ -8,6 +8,7 @@ import logging
 
 import numpy
 import random
+import pickle
 from theano.compat.six.moves import xrange
 
 from PIL import Image
@@ -78,6 +79,11 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         self.n_classes = len(reclassified)
 
         self.label_names = reclassified.keys()
+        print 'label_names:'
+        print self.label_names
+        label_names_pkl = open(os.path.join(string_utils.preprocess('${PYLEARN2_DATA_PATH}'), \
+            'food100', 'output_resized', 'label_names.pkl'), 'wb')
+        pickle.dump(self.label_names, label_names_pkl)
 
         # prepare loading
         datapath = os.path.join(
