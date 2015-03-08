@@ -48,7 +48,7 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
     preprocessor : WRITEME
     """
 
-    def __init__(self, which_set, center=False, rescale=False, gcn=None,
+    def __init__(self, which_set, input_size, center=False, rescale=False, gcn=None,
                  start=None, stop=None, axes=('b', 0, 1, 'c'),
                  toronto_prepro = False, preprocessor = None):
         # note: there is no such thing as the cifar10 validation set;
@@ -56,6 +56,7 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         # (as it is here)
 
         self.axes = axes
+        self.input_size = input_size
         image_to_labels, reclassified, instance_count = reclassify()
 
 
@@ -74,7 +75,7 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         print 'ntrain = %d, ntest = %f' % (ntrain, ntest)
 
         # we also expose the following details:
-        self.img_shape = (128, 128, 3)
+        self.img_shape = (input_size, input_size, 3)
         self.img_size = numpy.prod(self.img_shape)
         self.n_classes = len(reclassified)
 
@@ -82,13 +83,13 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         print 'label_names:'
         print self.label_names
         label_names_pkl = open(os.path.join(string_utils.preprocess('${PYLEARN2_DATA_PATH}'), \
-            'food100', 'output_resized', 'label_names.pkl'), 'wb')
+            'food100', 'output_resized_%d' % input_size, 'label_names.pkl'), 'wb')
         pickle.dump(self.label_names, label_names_pkl)
 
         # prepare loading
         datapath = os.path.join(
             string_utils.preprocess('${PYLEARN2_DATA_PATH}'),
-            'food100', 'output_resized')
+            'food100', 'output_resized_%d' % input_size)
 
         # k-hot encoding
         x = numpy.zeros((ninstances, self.img_size), dtype=dtype)
@@ -107,6 +108,8 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
             data[i] = numpy.asarray(img.rotate(90))
             for label in image_to_labels[image]:
                 y[i][self.label_names.index(label)] = 1
+            # print '%s: %s' % (image, ','.join(image_to_labels[image]))
+            # print y[i]
             i = i+1
             if i == ninstances:
                 break
@@ -116,7 +119,6 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         for i in xrange(ninstances):
             x[i] = data[i].flatten('F')
 
-        print x
         # process this data
         Xs = {'train': x[0:ntrain],
               'test': x[ntrain:ntrain+ntest]}
@@ -143,7 +145,7 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
             assert not gcn
             X = X / 255.
             if which_set == 'test':
-                other = FOOD100(which_set='train')
+                other = FOOD100(which_set='train', input_size=self.input_size)
                 oX = other.X
                 oX /= 255.
                 X = X - oX.mean(axis=0)
@@ -259,7 +261,8 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
 
         WRITEME
         """
-        return FOOD100(which_set='test', center=self.center,
+        return FOOD100(which_set='test', input_size=self.input_size,
+                       center=self.center,
                        rescale=self.rescale, gcn=self.gcn,
                        toronto_prepro=self.toronto_prepro,
                        axes=self.axes)
