@@ -25,11 +25,12 @@ if __name__ == '__main__':
     label_names = pickle.load(open('../data/food100/label_names.pkl', 'rb'))
 
     while True:
-        x = raw_input('Nom d\'image ? (q pour quitter)')
+        x = raw_input('Nom d\'image ? (q pour quitter) ')
         if x == 'q':
             break
         else:
             img = get_np_img(x, True)
             res = f(img)[0]
+            print res
             print ','.join([label_names[i] for i in xrange(len(res)) if res[i] >= .5])
 

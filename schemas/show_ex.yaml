@@ -1,7 +1,5 @@
 !obj:friesnsteaks.datasets.food100.FOOD100 {
         which_set: 'train',
-        start: 0,
-        stop: 5,
-        input_size: 64
+        input_size: 48 
 }
 

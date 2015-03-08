@@ -25,12 +25,12 @@
                      pool_shape: [4, 4],
                      pool_stride: [2, 2],
                      max_kernel_norm: 1.9365
-                 }, !obj:pylearn2.models.mlp.Sigmoid {
-                     monitor_style: 'bit_vector_class',
+                 }, !obj:pylearn2.models.mlp.Softmax {
+                     max_col_norm: 1.9365,
+                     istdev: .05,
+                     n_classes: 74, 
                      layer_name: 'y',
-                     dim: 74,
-                     sparse_init: 5
-                 }
+                 },
             ],
     },
     algorithm: !obj:pylearn2.training_algorithms.sgd.SGD {
@@ -47,6 +47,14 @@
                               input_size: %(input_size)i 
                           }
             },
+        cost: !obj:pylearn2.costs.cost.SumOfCosts { costs: [
+            !obj:pylearn2.costs.cost.MethodCost {
+                method: 'cost_from_X'
+            }, !obj:pylearn2.costs.mlp.WeightDecay {
+                coeffs: [ .00005, .00005, .00005 ]
+            }
+            ]
+        },
         monitor_iteration_mode: 'even_sequential',
         termination_criterion: !obj:pylearn2.termination_criteria.And {
             criteria: [
@@ -58,7 +66,7 @@
     },
     extensions:
         [ !obj:pylearn2.train_extensions.best_params.MonitorBasedSaveBest {
-             channel_name: 'test_y_misclass',
+             channel_name: 'test_objective',
              save_path: "convolutional_network_best.pkl"
         }, !obj:pylearn2.training_algorithms.learning_rule.MomentumAdjustor {
             start: 1,
