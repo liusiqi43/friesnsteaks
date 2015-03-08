@@ -58,7 +58,7 @@
     },
     extensions:
         [ !obj:pylearn2.train_extensions.best_params.MonitorBasedSaveBest {
-             channel_name: 'test_objective',
+             channel_name: 'test_y_misclass',
              save_path: "convolutional_network_best.pkl"
         }, !obj:pylearn2.training_algorithms.learning_rule.MomentumAdjustor {
             start: 1,

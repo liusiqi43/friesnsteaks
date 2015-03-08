@@ -83,7 +83,7 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         print 'label_names:'
         print self.label_names
         label_names_pkl = open(os.path.join(string_utils.preprocess('${PYLEARN2_DATA_PATH}'), \
-            'food100', 'output_resized_%d' % input_size, 'label_names.pkl'), 'wb')
+            'food100', 'label_names.pkl'), 'wb')
         pickle.dump(self.label_names, label_names_pkl)
 
         # prepare loading
