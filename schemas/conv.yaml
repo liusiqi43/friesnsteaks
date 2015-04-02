@@ -4,13 +4,15 @@
         input_size: %(input_size)i 
     },
     model: !obj:pylearn2.models.mlp.MLP {
-        batch_size: 50,
+        batch_size: 40,
         input_space: !obj:pylearn2.space.Conv2DSpace {
             shape: [%(input_size)i, %(input_size)i],
-            num_channels: 3
+            num_channels: 3,
+            axes: ['b', 0, 1, 'c']
         },
-        layers: [ !obj:pylearn2.models.mlp.ConvRectifiedLinear {
-                     layer_name: 'h2',
+        layers: [ 
+                 !obj:pylearn2.models.mlp.ConvRectifiedLinear {
+                     layer_name: 'h0',
                      output_channels: 74,
                      irange: .05,
                      kernel_shape: [5, 5],
@@ -18,27 +20,25 @@
                      pool_stride: [2, 2],
                      max_kernel_norm: 1.9365
                  }, !obj:pylearn2.models.mlp.ConvRectifiedLinear {
-                     layer_name: 'h3',
+                     layer_name: 'h1',
                      output_channels: 74,
                      irange: .05,
                      kernel_shape: [5, 5],
                      pool_shape: [4, 4],
                      pool_stride: [2, 2],
                      max_kernel_norm: 1.9365
-                 }, !obj:pylearn2.models.mlp.Softmax {
+                 }, 
+                 !obj:pylearn2.models.mlp.Softmax {
+                     layer_name: 'y',
                      max_col_norm: 1.9365,
                      istdev: .05,
                      n_classes: 74, 
-                     layer_name: 'y',
-                 },
+                 }
             ],
     },
     algorithm: !obj:pylearn2.training_algorithms.sgd.SGD {
         train_iteration_mode: 'even_sequential',
-        learning_rate: .01,
-        learning_rule: !obj:pylearn2.training_algorithms.learning_rule.Momentum {
-            init_momentum: .1
-        },
+        learning_rate: .5,
         monitoring_dataset:
             {
                 'train' : *train,
@@ -47,32 +47,25 @@
                               input_size: %(input_size)i 
                           }
             },
-        cost: !obj:pylearn2.costs.cost.SumOfCosts { costs: [
-            !obj:pylearn2.costs.cost.MethodCost {
-                method: 'cost_from_X'
-            }, !obj:pylearn2.costs.mlp.WeightDecay {
-                coeffs: [ .00005, .00005, .00005 ]
-            }
-            ]
-        },
         monitor_iteration_mode: 'even_sequential',
         termination_criterion: !obj:pylearn2.termination_criteria.And {
             criteria: [
                 !obj:pylearn2.termination_criteria.EpochCounter {
-                    max_epochs: 1000 
+                    max_epochs: 20 
                 },
             ]
         },
     },
-    extensions:
-        [ !obj:pylearn2.train_extensions.best_params.MonitorBasedSaveBest {
-             channel_name: 'test_objective',
-             save_path: "convolutional_network_best.pkl"
-        }, !obj:pylearn2.training_algorithms.learning_rule.MomentumAdjustor {
-            start: 1,
-            saturate: 10,
-            final_momentum: .99
-        }
+    extensions: [ 
+       !obj:pylearn2.train_extensions.best_params.MonitorBasedSaveBest {
+           channel_name: 'test_objective',
+           save_path: 'convolutional_network_best.pkl'
+       },
+       !obj:pylearn2.training_algorithms.sgd.LinearDecayOverEpoch {
+            start: 5,
+            saturate: 30,
+            decay_factor: 0.01
+       }
     ]
 }
 
