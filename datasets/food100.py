@@ -1,5 +1,6 @@
 import os
 import logging
+import sys
 
 import numpy
 import random
@@ -32,11 +33,11 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
 
         _logger.info('{} classes, with an average of {} examples per class.'.format(len(reclassified), sum(instance_count.values())/len(reclassified)))
         _logger.info('A total of {} examples.'.format(sum(instance_count.values())))
-        ninstances = stop - start if start is not None else sum(instance_count.values())
+        ninstances = stop - start if start is not None else len(image_to_labels)
 
-        ntrain = ninstances * .8
-        ntest = ninstances * .2
-        print 'ntrain = %d, ntest = %f' % (ntrain, ntest)
+        ntrain = int(ninstances * .8)
+        ntest = ninstances - ntrain
+        print 'ntrain = %d, ntest = %d' % (ntrain, ntest)
 
         self.img_shape = (input_size, input_size, 3)
         self.img_size = numpy.prod(self.img_shape)
@@ -63,12 +64,19 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         # randomize data
         images = image_to_labels.keys()
         random.shuffle(images)
+        print (ninstances, ntrain, ntest)
+        print len(images)
         for image in images:
             img = Image.open(os.path.join(datapath, image))
             img = numpy.asarray(img, dtype='float32')
+
+
             # b,c,0,1
             # img.transpose(2, 0, 1)
             x[i] = img
+
+            # if len(image_to_labels[image]):
+            #    print 'image_to_labels[image] empty'+image
             for label in image_to_labels[image]:
                 y[i][self.label_names.index(label)] = 1.
                 break
@@ -76,18 +84,30 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
             if i == ninstances:
                 break
 
+        # for sample in x:
+        #     if numpy.all(sample == 0):
+        #         raise Exception('Empty image sample')
+
+        # for sample in y:
+        #     if numpy.all(sample == 0):
+        #         raise Exception('Empty desired label')
+
         # process this data
         Xs = {'train': x[0:ntrain],
-              'test': x[ntrain:ntrain+ntest]}
+              'test': x[ntrain:(ntrain+ntest)]}
+
+        # print Xs['test'][0]
+        # print Xs['test'].shape
 
         Ys = {'train': y[0:ntrain],
-              'test': y[ntrain:ntrain+ntest]}
+              'test': y[ntrain:(ntrain+ntest)]}
 
         X = Xs[which_set]
         y = Ys[which_set]
 
-        if which_set == 'test':
-            assert X.shape[0] == ntest
+        for i in xrange(10):
+            print y[i]
+            # print random.choice(y[-10,:])
 
         super(FOOD100, self).__init__(topo_view=X, axes=self.axes, y=y, y_labels=self.n_classes)
 
