@@ -2,14 +2,14 @@ import theano
 from pylearn2.config import yaml_parse
 train = open('conv.yaml', 'r').read()
 
-input_size = 48
+input_size = 64
 nvis = input_size * input_size * 3
 axes = ['b', 0, 1, 'c']
 
 train_params = {
     'input_size': input_size,
     'nvis': nvis,
-    'axes': axes
+    'axes': str(axes)
 }
 
 train = train % (train_params)

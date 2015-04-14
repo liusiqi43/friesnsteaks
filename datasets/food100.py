@@ -1,6 +1,7 @@
 import os
 import logging
 import sys
+from theano import config
 
 import numpy
 import random
@@ -26,6 +27,8 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
 
     def __init__(self, which_set, input_size, axes, start=None,
                  stop=None):
+        # make randomization deterministic
+        random.seed(647)
 
         self.input_size = input_size
         image_to_labels, reclassified, instance_count = reclassify()
@@ -36,7 +39,8 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
 
         self.img_shape = (input_size, input_size, 3)
         self.img_size = numpy.prod(self.img_shape)
-        self.n_classes = len(reclassified)
+        self.nclasses = len(reclassified)
+        print '...nclasses = %d' % (self.nclasses)
 
         self.label_names = reclassified.keys()
         print '...label_names: \n%s' % self.label_names
@@ -50,9 +54,9 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
             string_utils.preprocess('${PYLEARN2_DATA_PATH}'),
             'food100', 'output_resized_%d' % input_size)
 
-        x = numpy.zeros((ninstances, ) + self.img_shape, dtype='float32')
+        x = numpy.zeros((ninstances, ) + self.img_shape, dtype=config.floatX)
         # k-hot encoding
-        y = numpy.zeros((ninstances, self.n_classes), dtype='int64')
+        y = numpy.zeros((ninstances, self.nclasses), dtype='int64')
 
         # load data
         i = 0
@@ -61,24 +65,25 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         random.shuffle(images)
         for image in images:
             img = Image.open(os.path.join(datapath, image))
-            img = numpy.asarray(img, dtype='float32')
+            img = numpy.asarray(img, dtype=config.floatX)
 
             x[i] = img
 
             for label in image_to_labels[image]:
-                y[i][self.label_names.index(label)] = 1.
+                y[i][self.label_names.index(label)] = 1
                 break
+
             i = i+1
             if i == ninstances:
                 break
 
-        # for sample in x:
-        #     if numpy.all(sample == 0):
-        #         raise Exception('Empty image sample')
+        for sample in x:
+            if numpy.all(sample == 0):
+                raise Exception('Empty image sample')
 
-        # for sample in y:
-        #     if numpy.all(sample == 0):
-        #         raise Exception('Empty desired label')
+        for sample in y:
+            if numpy.all(sample == 0):
+                raise Exception('Empty desired label')
 
         # process this data
         Xs = {'train': x[0:ntrain],
@@ -102,9 +107,9 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
 
         print '...randomly printing three desired label examples...'
         for i in xrange(3):
-            print random.choice(y[-10,:])
+            print random.choice(y[-10:])
 
-        super(FOOD100, self).__init__(topo_view=X, axes=axes, y=y, y_labels=self.n_classes)
+        super(FOOD100, self).__init__(topo_view=X, axes=axes, y=y, y_labels=self.nclasses)
 
         assert not contains_nan(self.X)
 

@@ -2,81 +2,61 @@
     dataset: &train !obj:friesnsteaks.datasets.food100.FOOD100 {
         which_set: 'train',
         input_size: %(input_size)i,
-        axes: %(axes)i
+        axes: %(axes)s
     },
-    # model: !obj:pylearn2.models.mlp.MLP {
-    #     batch_size: 100,
-    #     input_space: !obj:pylearn2.space.Conv2DSpace {
-    #         shape: [%(input_size)i, %(input_size)i],
-    #         num_channels: 3,
-    #         axes: ['b', 0, 1, 'c']
-    #     },
-    #     layers: [ 
-    #              !obj:pylearn2.models.mlp.Softmax {
-    #                  max_col_norm: 1.9365,
-    #                  istdev: .05,
-    #                  n_classes: 74, 
-    #                  layer_name: 'y'
-    #              }
-    #         ],
-    # },
-    model: !obj:pylearn2.models.softmax_regression.SoftmaxRegression {
-        n_classes: 74,
-        irange: 0.,
-        nvis: %(nvis)i
+    model: !obj:pylearn2.models.mlp.MLP {
+        input_space: !obj:pylearn2.space.Conv2DSpace {
+            shape: [%(input_size)i, %(input_size)i],
+            num_channels: 3,
+            axes: %(axes)s
+        },
+        layers: [ 
+          # !obj:pylearn2.models.mlp.Sigmoid {
+          #      layer_name: 'y',
+          #           monitor_style: 'bit_vector_class',
+          #           dim: 74,
+          #           sparse_init: 5
+          #       }
+                 !obj:pylearn2.models.mlp.Softmax {
+                     max_col_norm: 1.9365,
+                     irange: 1,
+                     n_classes: 74, 
+                     layer_name: 'y'
+                 }
+            ],
     },
-    algorithm: !obj:pylearn2.training_algorithms.bgd.BGD {
-        batch_size: 10000,
-        line_search_mode: 'exhaustive',
-        conjugate: 1,
+    algorithm: !obj:pylearn2.training_algorithms.sgd.SGD {
+        batch_size: 100,
+        train_iteration_mode: 'even_sequential',
+        learning_rate: 5e-3,
         monitoring_dataset:
             {
                 'train' : *train,
                 'test'  : !obj:friesnsteaks.datasets.food100.FOOD100 {
                               which_set: 'test',
                               input_size: %(input_size)i,
-                              axes: %(axes)i
+                              axes: %(axes)s
                           }
             },
+        monitor_iteration_mode: 'even_sequential',
         termination_criterion: !obj:pylearn2.termination_criteria.And {
             criteria: [
                 !obj:pylearn2.termination_criteria.EpochCounter {
-                    max_epochs: 50 
+                    max_epochs: 500 
                 },
             ]
         },
     },
-    # algorithm: !obj:pylearn2.training_algorithms.sgd.SGD {
-    #     batch_size: 1000,
-    #     train_iteration_mode: 'even_sequential',
-    #     learning_rate: 1e-3,
-    #     monitoring_dataset:
-    #         {
-    #             'train' : *train,
-    #             'test'  : !obj:friesnsteaks.datasets.food100.FOOD100 {
-    #                           which_set: 'test',
-    #                           input_size: %(input_size)i 
-    #                       }
-    #         },
-    #     monitor_iteration_mode: 'even_sequential',
-    #     termination_criterion: !obj:pylearn2.termination_criteria.And {
-    #         criteria: [
-    #             !obj:pylearn2.termination_criteria.EpochCounter {
-    #                 max_epochs: 50 
-    #             },
-    #         ]
-    #     },
-    # },
     extensions: [ 
        !obj:pylearn2.train_extensions.best_params.MonitorBasedSaveBest {
-           channel_name: 'test_y_misclass',
+           channel_name: 'train_objective',
            save_path: 'convolutional_network_best.pkl'
        },
-       # !obj:pylearn2.training_algorithms.sgd.LinearDecayOverEpoch {
-       #      start: 5,
-       #      saturate: 30,
-       #      decay_factor: 0.01
-       # }
+       !obj:pylearn2.training_algorithms.sgd.LinearDecayOverEpoch {
+            start: 5,
+            saturate: 30,
+            decay_factor: 0.01
+       }
     ],
     save_path: 'convolutional_network_live.pkl',
     save_freq: 1
