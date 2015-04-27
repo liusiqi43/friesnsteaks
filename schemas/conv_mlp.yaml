@@ -11,12 +11,14 @@
             axes: %(axes)s
         },
         layers: [ 
-          # !obj:pylearn2.models.mlp.Sigmoid {
-          #      layer_name: 'y',
-          #           monitor_style: 'bit_vector_class',
-          #           dim: 74,
-          #           sparse_init: 5
-          #       }
+                 !obj:pylearn2.models.mlp.ConvRectifiedLinear {
+                     layer_name: 'h2',
+                     output_channels: %(input_size)i,
+                     irange: .05,
+                     kernel_shape: [10, 10],
+                     pool_shape: [10, 10],
+                     pool_stride: [2, 2],
+                 },
                  !obj:pylearn2.models.mlp.Softmax {
                      irange: .01,
                      n_classes: 74, 
@@ -24,10 +26,9 @@
                  }
             ],
     },
-    algorithm: !obj:pylearn2.training_algorithms.sgd.SGD {
-        batch_size: 100,
-        train_iteration_mode: 'even_sequential',
-        learning_rate: 5e-2,
+    algorithm: !obj:pylearn2.training_algorithms.bgd.BGD {
+        batch_size: 500,
+        line_search_mode: 'exhaustive',
         monitoring_dataset:
             {
                 'train' : *train,
@@ -37,11 +38,10 @@
                               axes: %(axes)s
                           }
             },
-        monitor_iteration_mode: 'even_sequential',
         termination_criterion: !obj:pylearn2.termination_criteria.And {
             criteria: [
                 !obj:pylearn2.termination_criteria.EpochCounter {
-                    max_epochs: 500 
+                    max_epochs: 50 
                 },
             ]
         },

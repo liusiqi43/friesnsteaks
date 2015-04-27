@@ -6,6 +6,7 @@ from pylearn2.utils import serial
 
 def get_model_function(model_path):
     model = serial.load(model_path)
+    print model
     X = model.get_input_space().make_theano_batch()
     Y = model.fprop(X)
 
@@ -21,7 +22,7 @@ def get_np_img(img_path, show=False):
     return np.cast[theano.config.floatX](data)
 
 if __name__ == '__main__':
-    f = get_model_function('../schemas/convolutional_network_live.pkl')
+    f = get_model_function('../schemas/convolutional_network_best.pkl')
     label_names = pickle.load(open('../data/food100/label_names.pkl', 'rb'))
 
     while True:
@@ -32,4 +33,4 @@ if __name__ == '__main__':
             img = get_np_img(x, True)
             res = f(img)[0]
             print res
-            print ','.join([label_names[i] for i in xrange(len(res)) if res[i] >= .5])
+            print ','.join([label_names[i] for i in xrange(len(res)) if res[i] > 0])
