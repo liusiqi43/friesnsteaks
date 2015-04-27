@@ -16,7 +16,7 @@ from pylearn2.utils import contains_nan
 from pylearn2.utils import serial
 from pylearn2.utils import string_utils
 
-from friesnsteaks.data.preprocessing.reclassify import reclassify
+from reclassify import reclassify
 
 
 _logger = logging.getLogger(__name__)

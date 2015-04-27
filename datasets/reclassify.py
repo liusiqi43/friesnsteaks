@@ -38,7 +38,7 @@ def reclassify(img_size=128):
                 reclassified[val].append(classes[key])
 
     filenames = {}
-    ls = os.listdir(os.path.join(__location__, '../food100/output_resized_%d' % img_size))
+    ls = os.listdir(os.path.join(__location__, '../data/food100/output_resized_%d' % img_size))
     for f in ls:
         m = re.search('img_(.+?)_.*.jpg', f)
         if m is not None:
