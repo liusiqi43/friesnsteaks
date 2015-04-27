@@ -1,5 +1,6 @@
 import numpy as np
 import pickle
+import sys
 import theano
 from PIL import Image
 from pylearn2.utils import serial
@@ -22,7 +23,7 @@ def get_np_img(img_path, show=False):
     return np.cast[theano.config.floatX](data)
 
 if __name__ == '__main__':
-    f = get_model_function('../schemas/convolutional_network_best.pkl')
+    f = get_model_function(sys.argv[1])
     label_names = pickle.load(open('../data/food100/label_names.pkl', 'rb'))
 
     while True:

@@ -45,6 +45,9 @@ def reclassify(img_size=128):
             else:
                 image_to_labels[img] = [label]
 
+    # print image_to_labels, reclassified, example_count
     # Use reclassified as training set for each class:
     # ex: reclassified['spaghetti'] = ['img_27_xx', ... , 'img_84_xx']
     return image_to_labels, reclassified, example_count
+
+reclassify()

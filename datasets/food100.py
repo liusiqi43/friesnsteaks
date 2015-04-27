@@ -1,6 +1,7 @@
 import os
 import logging
 import sys
+from pprint import pprint
 from theano import config
 
 import numpy
@@ -101,6 +102,7 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
 
         X = Xs[which_set]
         y = Ys[which_set]
+        numpy.savetxt('y_'+which_set+'.txt', y, fmt='%d')
 
         print '...%s set count by class' % which_set
         class_count = [(self.label_names[i], numpy.count_nonzero(y[:,i])) for i in xrange(y.shape[1])]
@@ -108,8 +110,8 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         print class_count
 
         print '...randomly printing three desired label examples...'
-        for i in xrange(3):
-            print random.choice(y[-10:])
+        for i in xrange(10):
+            print random.choice(y)
 
         super(FOOD100, self).__init__(topo_view=X, axes=axes, y=y, y_labels=self.nclasses)
 
