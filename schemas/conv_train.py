@@ -1,6 +1,8 @@
 import theano
+import sys
 from pylearn2.config import yaml_parse
-train = open('conv.yaml', 'r').read()
+
+train = open(sys.argv[1], 'r').read()
 
 input_size = 64
 nvis = input_size * input_size * 3
