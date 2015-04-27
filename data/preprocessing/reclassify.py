@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import pickle
 import re
 import os, sys
@@ -5,11 +7,27 @@ from pprint import pprint
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
+def get_mapping():
+    # Critere: étant donné un nom de classe, est-ce qu'on réfléchit à ces images
+    #'cooked noodle':'noodle' without soup
+    #'noodle soup':'noodle' with soup
+    #'raw fish' visually quite different from other fish.
+    mapping = {
+       'steak': ['steak'],
+       'french fries': ['french fries'],
+    }
+    return mapping
+
+def get_classes():
+    classes = {
+            'steak':  61,
+            'french fries':  98,
+    }
+    return classes
+
 def reclassify(img_size=128):
-    classes_pkl = open(os.path.join(__location__, 'classes.pkl'), 'rb')
-    mapping_pkl = open(os.path.join(__location__, 'mapping.pkl'), 'rb')
-    classes = pickle.load(classes_pkl)
-    mapping = pickle.load(mapping_pkl)
+    classes = get_classes()
+    mapping = get_mapping()
 
     reclassified = {}
     for key, value in mapping.iteritems():
@@ -45,9 +63,6 @@ def reclassify(img_size=128):
             else:
                 image_to_labels[img] = [label]
 
-    # print image_to_labels, reclassified, example_count
     # Use reclassified as training set for each class:
     # ex: reclassified['spaghetti'] = ['img_27_xx', ... , 'img_84_xx']
     return image_to_labels, reclassified, example_count
-
-reclassify()

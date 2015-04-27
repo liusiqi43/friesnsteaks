@@ -54,8 +54,7 @@ docs/_build/
 target/
 
 # Custom
-data/food100
-data/food-101
+# data/food100
 *.swp
 *.swo
 *.pkl
