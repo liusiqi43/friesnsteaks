@@ -103,7 +103,9 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         y = Ys[which_set]
 
         print '...%s set count by class' % which_set
-        print [numpy.count_nonzero(y[:,i]) for i in xrange(y.shape[1])]
+        class_count = [(self.label_names[i], numpy.count_nonzero(y[:,i])) for i in xrange(y.shape[1])]
+        class_count.sort(lambda x, y: x[1] - y[1])
+        print class_count
 
         print '...randomly printing three desired label examples...'
         for i in xrange(3):
