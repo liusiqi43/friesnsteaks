@@ -32,7 +32,7 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         random.seed(647)
 
         self.input_size = input_size
-        image_to_labels, reclassified, instance_count = reclassify()
+        image_to_labels, reclassified, instance_count = reclassify(input_size)
         ninstances = stop - start if start is not None else len(image_to_labels)
         ntrain = int(ninstances * .8)
         ntest = ninstances - ntrain
