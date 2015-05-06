@@ -31,7 +31,7 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         random.seed(647)
 
         self.input_size = input_size
-        image_to_labels, reclassified, instance_count = reclassify()
+        image_to_labels, reclassified, instance_count = reclassify(input_size)
         ninstances = stop - start if start is not None else len(image_to_labels)
         ntrain = int(ninstances * .8)
         ntest = ninstances - ntrain
@@ -57,6 +57,7 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         x = numpy.zeros((ninstances, ) + self.img_shape, dtype=config.floatX)
         # k-hot encoding
         y = numpy.zeros((ninstances, self.nclasses), dtype='int64')
+        # y = numpy.zeros((ninstances), dtype='int64')
 
         # load data
         i = 0
@@ -71,6 +72,7 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
 
             for label in image_to_labels[image]:
                 y[i][self.label_names.index(label)] = 1
+                # y[i] = self.label_names.index(label)
                 break
 
             i = i+1
@@ -110,8 +112,12 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         print '...randomly printing three desired label examples...'
         for i in xrange(3):
             print random.choice(y[-10:])
+        test_count = 10
+        print '...randomly printing %d desired label examples...' % test_count
+        for i in xrange(test_count):
+            print random.choice(y)
 
-        super(FOOD100, self).__init__(topo_view=X, axes=axes, y=y, y_labels=self.nclasses)
+        super(FOOD100, self).__init__(topo_view=X, axes=axes, y=y)
 
         assert not contains_nan(self.X)
 

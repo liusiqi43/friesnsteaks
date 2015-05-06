@@ -1,7 +1,10 @@
+import sys
+import os
 import numpy as np
 import pickle
 import theano
 from PIL import Image
+from glob import glob
 from pylearn2.utils import serial
 
 def get_model_function(model_path):
@@ -22,15 +25,13 @@ def get_np_img(img_path, show=False):
     return np.cast[theano.config.floatX](data)
 
 if __name__ == '__main__':
-    f = get_model_function('../schemas/convolutional_network_best.pkl')
-    label_names = pickle.load(open('../data/food100/label_names.pkl', 'rb'))
+    f = get_model_function(sys.argv[1])
+    # 'data/food100/output_resized_64/img_61_*.jpg'
+    datapath = sys.argv[2]
+    print 'Loading from: %s' % datapath
 
-    while True:
-        x = raw_input('Nom d\'image ? (q pour quitter) ')
-        if x == 'q':
-            break
-        else:
-            img = get_np_img(x, True)
-            res = f(img)[0]
-            print res
-            print ','.join([label_names[i] for i in xrange(len(res)) if res[i] > 0])
+    for example in glob(datapath):
+        print example
+        img = get_np_img(example, False)
+        res = f(img)[0]
+        print res
