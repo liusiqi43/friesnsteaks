@@ -10,24 +10,53 @@
             shape: [%(img_height)i, %(img_width)i],
             num_channels: 3, 
         },
-        layers: [
-          !obj:pylearn2.models.mlp.Sigmoid {
-               layer_name: 'h2',
-               dim: 10,
-               sparse_init: 5
-          },
-          !obj:pylearn2.models.mlp.Softmax {
-              layer_name: 'y',
-              n_classes: %(nb_classes)i,
-              istdev: .05
-          }
+        layers: [ !obj:pylearn2.models.mlp.ConvRectifiedLinear {
+                     layer_name: 'h2',
+                     output_channels: %(output_channels_h2)i,
+                     irange: .01,
+                     kernel_shape: [%(kernel_side_h2)i, %(kernel_side_h2)i],
+                     pool_shape: [%(pool_side_h2)i, %(pool_side_h2)i],
+                     pool_stride: [%(pool_stride_h2)i, %(pool_stride_h2)i],
+                 }, 
+                  !obj:pylearn2.models.mlp.ConvRectifiedLinear {
+                     layer_name: 'h3',
+                     output_channels: %(output_channels_h3)i,
+                     irange: .01,
+                     kernel_shape: [%(kernel_side_h3)i, %(kernel_side_h3)i],
+                     pool_shape: [%(pool_side_h3)i, %(pool_side_h2)i],
+                     pool_stride: [%(pool_stride_h3)i, %(pool_stride_h3)i],
+                 },
+                 !obj:pylearn2.models.mlp.RectifiedLinear {
+                     layer_name: 'h4',
+                     dim: %(dim_h4)i,
+                     sparse_init: %(sparse_init_h4)i
+                 }, 
+                 !obj:pylearn2.models.mlp.RectifiedLinear {
+                     layer_name: 'h5',
+                     dim: %(dim_h5)i,
+                     sparse_init: %(sparse_init_h5)i
+                 },
+                 !obj:pylearn2.models.mlp.RectifiedLinear {
+                     layer_name: 'h6',
+                     dim: %(dim_h6)i,
+                     sparse_init: %(sparse_init_h6)i
+                 },
+                 !obj:pylearn2.models.mlp.Sigmoid {
+                     layer_name: 'y',
+                     dim: %(nb_classes)i,
+                     istdev: .05,
+                     monitor_style: 'bit_vector_class',
+                 }
         ],
     },
     algorithm: !obj:pylearn2.training_algorithms.sgd.SGD {
         batch_size: %(batch_size)i,
         learning_rate: %(learning_rate)f,
-        monitor_iteration_mode: 'even_sequential',
-        train_iteration_mode: 'even_sequential',
+        learning_rule: !obj:pylearn2.training_algorithms.learning_rule.Momentum {
+            init_momentum: .5,
+        },
+        train_iteration_mode: even_shuffled_sequential,
+        monitor_iteration_mode: even_shuffled_sequential,
         monitoring_dataset: 
           {
             'train': *train,
@@ -37,28 +66,36 @@
                 axes: %(axes)s
             },
           },
-        # cost: !obj:pylearn2.costs.cost.SumOfCosts { costs: [
-        #     !obj:pylearn2.costs.cost.MethodCost {
-        #         method: 'cost_from_X'
-        #     }, !obj:pylearn2.costs.mlp.WeightDecay {
-        #         coeffs: { 'y': %(weight_decay_y)f }
-        #     }
-        #     ]
-        # },
-        termination_criterion: !obj:pylearn2.termination_criteria.And {
-            criteria: [
-                !obj:pylearn2.termination_criteria.EpochCounter {
-                    max_epochs: %(max_epochs)i
-                },
+        cost: !obj:pylearn2.costs.cost.SumOfCosts { costs: [
+            !obj:pylearn2.costs.cost.MethodCost {
+                method: 'cost_from_X'
+            }, !obj:pylearn2.costs.mlp.WeightDecay {
+                coeffs: { 'h2': %(weight_decay_h2)f, 
+                          'h3': %(weight_decay_h2)f, 
+                          'h4': %(weight_decay_h4)f, 
+                          'h5': %(weight_decay_h5)f, 
+                          'h6': %(weight_decay_h6)f, 
+                          'y': %(weight_decay_y)f }
+            }
             ]
         },
+        termination_criterion: !obj:pylearn2.termination_criteria.MonitorBased {
+            channel_name: "test_y_misclass",
+            prop_decrease: 0.,
+            N: 100
+        },
     },
-    extensions:
-        [ !obj:pylearn2.train_extensions.best_params.MonitorBasedSaveBest {
+    extensions: [ 
+        !obj:pylearn2.train_extensions.best_params.MonitorBasedSaveBest {
              channel_name: 'test_y_misclass',
              save_path: "%(save_path_best)s"
-          }
-        ],
+        },
+        !obj:pylearn2.training_algorithms.learning_rule.MomentumAdjustor {
+            start: 1,
+            saturate: 250,
+            final_momentum: .7
+        },
+    ],
     save_path: "%(save_path)s",
     save_freq: 1
 }
