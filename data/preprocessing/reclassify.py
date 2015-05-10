@@ -213,7 +213,7 @@ def get_classes():
     }
     return classes
 
-def reclassify(img_size=128):
+def reclassify(which_set, img_size=128):
     classes = get_classes()
     mapping = get_mapping()
 
@@ -226,7 +226,8 @@ def reclassify(img_size=128):
                 reclassified[val].append(classes[key])
 
     filenames = {}
-    ls = os.listdir(os.path.join(__location__, '../food100/output_resized_%d' % img_size))
+    ls = os.listdir(os.path.join(__location__, \
+                                 '../food100/output_%d/%s' % (img_size, which_set)))
     for f in ls:
         m = re.search('img_(.+?)_.*.jpg', f)
         if m is not None:
@@ -239,7 +240,12 @@ def reclassify(img_size=128):
     for key, value in reclassified.iteritems():
         fnames = []
         for val in value:
-            fnames = fnames + filenames[val]
+            try:
+                fnames = fnames + filenames[val]
+            except KeyError:
+                print which_set
+                print filenames
+                print reclassified[key]
         example_count[key] = len(fnames)
         reclassified[key] = fnames
 
