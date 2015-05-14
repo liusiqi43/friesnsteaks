@@ -33,6 +33,9 @@ hyper_params = {
     "kernel_side_h2": 5,
     "kernel_side_h3": 3,
     "kernel_side_h4": 3,
+
+    "sparse_init_h5": 15,
+    "sparse_init_h6": 15,
 }
 
 yaml = yaml % (hyper_params)
