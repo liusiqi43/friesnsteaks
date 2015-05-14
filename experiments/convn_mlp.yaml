@@ -33,19 +33,23 @@
                      pool_stride: [%(pool_stride_h2)i, %(pool_stride_h2)i],
                      max_kernel_norm: 1.9365,
                  },
-                 !obj:pylearn2.models.mlp.ConvRectifiedLinear {
+                 !obj:pylearn2.models.mlp.ConvElemwise {
                      layer_name: 'h3',
                      output_channels: %(output_channels_h3)i,
                      irange: .01,
                      kernel_shape: [%(kernel_side_h3)i, %(kernel_side_h3)i],
+                     nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
                      max_kernel_norm: 1.9365,
+                     tied_b: 1,
                  },
-                 !obj:pylearn2.models.mlp.ConvRectifiedLinear {
+                 !obj:pylearn2.models.mlp.ConvElemwise {
                      layer_name: 'h4',
                      output_channels: %(output_channels_h4)i,
                      irange: .01,
                      kernel_shape: [%(kernel_side_h4)i, %(kernel_side_h4)i],
+                     nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
                      max_kernel_norm: 1.9365,
+                     tied_b: 1,
                  },
                  !obj:pylearn2.models.mlp.RectifiedLinear {
                      max_col_norm: 1.9365,
