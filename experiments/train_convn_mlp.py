@@ -15,34 +15,24 @@ hyper_params = {
     "save_path" : "experiments/model_%s_live.pkl" % strftime("%Y-%m-%d_%H:%M", gmtime()),
     "save_path_best" : "experiments/model_%s_best.pkl" % strftime("%Y-%m-%d_%H:%M", gmtime()),
 
-    "output_channels_h1": 48,
-    "output_channels_h2": 96,
-    "output_channels_h3": 128,
+    "output_channels_h1": 32,
+    "output_channels_h2": 64,
+    "output_channels_h3": 96,
     "output_channels_h4": 128,
-    "output_channels_h5": 128,
-    "output_channels_h6": 74,
+
+    "dim_h5": 98,
+    "dim_h6": 98,
 
     "pool_stride_h1": 2,
-    "pool_stride_h3": 2,
-    "pool_stride_h5": 2,
+    "pool_stride_h2": 2,
 
-    "pool_side_h1": 2,
-    "pool_side_h3": 2,
-    "pool_side_h5": 2,
+    "pool_side_h1": 20,
+    "pool_side_h2": 8,
 
-    "kernel_side_h1": 5,
-    "kernel_side_h2": 7,
-    "kernel_side_h3": 5,
-    "kernel_side_h4": 5,
-    "kernel_side_h5": 3,
-    "kernel_side_h6": 6,
-
-    "weight_decay_h2": 0.00005,
-    "weight_decay_h3": 0.00005,
-    "weight_decay_h4": 0.00005,
-    "weight_decay_h5": 0.00005,
-    "weight_decay_h6": 0.00005,
-    "weight_decay_y": 0.00005,
+    "kernel_side_h1": 6,
+    "kernel_side_h2": 5,
+    "kernel_side_h3": 3,
+    "kernel_side_h4": 3,
 }
 
 yaml = yaml % (hyper_params)
