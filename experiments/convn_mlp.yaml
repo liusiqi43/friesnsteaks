@@ -3,7 +3,7 @@
 
 
 !obj:pylearn2.train.Train {
-    dataset: &train !obj:friesnsteaks.datasets.food100.FOOD100 {
+    dataset: &train !obj:datasets.food100.FOOD100 {
         which_set: 'train',
         input_size: %(input_size)i,
         axes: %(axes)s,
@@ -79,12 +79,12 @@
         monitoring_dataset: 
           {
             'train': *train,
-            'valid': !obj:friesnsteaks.datasets.food100.FOOD100 {
+            'valid': !obj:datasets.food100.FOOD100 {
                 which_set: 'valid',
                 input_size: %(input_size)i,
                 axes: %(axes)s
             },
-            'test': !obj:friesnsteaks.datasets.food100.FOOD100 {
+            'test': !obj:datasets.food100.FOOD100 {
                 which_set: 'test',
                 input_size: %(input_size)i,
                 axes: %(axes)s
