@@ -14,7 +14,7 @@ from pylearn2.datasets import cache, dense_design_matrix
 from pylearn2.expr.preprocessing import global_contrast_normalize
 from pylearn2.utils import contains_nan, serial, string_utils
 
-from friesnsteaks.data.preprocessing.reclassify import reclassify
+from reclassify import reclassify
 
 
 numpy.set_printoptions(threshold=numpy.nan)

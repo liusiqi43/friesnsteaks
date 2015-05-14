@@ -15,25 +15,27 @@ hyper_params = {
     "save_path" : "experiments/model_%s_live.pkl" % strftime("%Y-%m-%d_%H:%M", gmtime()),
     "save_path_best" : "experiments/model_%s_best.pkl" % strftime("%Y-%m-%d_%H:%M", gmtime()),
 
-    "output_channels_h2": 12,
-    "output_channels_h3": 12,
+    "output_channels_h1": 48,
+    "output_channels_h2": 96,
+    "output_channels_h3": 128,
+    "output_channels_h4": 128,
+    "output_channels_h5": 128,
+    "output_channels_h6": 74,
 
-    "pool_stride_h2": 1,
-    "pool_stride_h3": 1,
+    "pool_stride_h1": 2,
+    "pool_stride_h3": 2,
+    "pool_stride_h5": 2,
 
-    "pool_side_h2": 3,
-    "pool_side_h3": 3,
+    "pool_side_h1": 2,
+    "pool_side_h3": 2,
+    "pool_side_h5": 2,
 
-    "kernel_side_h2": 8,
-    "kernel_side_h3": 8,
-
-    "dim_h4": 30,
-    "dim_h5": 30,
-    "dim_h6": 30,
-
-    "sparse_init_h4": 2,
-    "sparse_init_h5": 2,
-    "sparse_init_h6": 2,
+    "kernel_side_h1": 5,
+    "kernel_side_h2": 7,
+    "kernel_side_h3": 5,
+    "kernel_side_h4": 5,
+    "kernel_side_h5": 3,
+    "kernel_side_h6": 6,
 
     "weight_decay_h2": 0.00005,
     "weight_decay_h3": 0.00005,
