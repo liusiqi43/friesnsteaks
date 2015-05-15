@@ -18,7 +18,7 @@ hyper_params = {
     "output_channels_h1": 32,
     "output_channels_h2": 64,
     "output_channels_h3": 96,
-    "output_channels_h4": 128,
+    "output_channels_h4": 96,
 
     "dim_h5": 98,
     "dim_h6": 98,
