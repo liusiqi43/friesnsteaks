@@ -7,9 +7,9 @@ yaml = open("experiments/convn_mlp.yaml", 'r').read()
 hyper_params = {
     'axes': "['b', 0, 1, 'c']",
     "batch_size" : 25,
-    'input_size': 96,
-    "img_width" : 96,
-    "img_height" : 96,
+    'input_size': 72,
+    "img_width" : 72,
+    "img_height" : 72,
     "nb_classes" : 74,
     "learning_rate" : 0.005,
     "save_path" : "experiments/model_%s_live.pkl" % strftime("%Y-%m-%d_%H:%M", gmtime()),
@@ -17,7 +17,7 @@ hyper_params = {
 
     "output_channels_h1": 32,
     "output_channels_h2": 64,
-    "output_channels_h3": 96,
+    "output_channels_h3": 72,
     "output_channels_h4": 96,
 
     "dim_h5": 98,
