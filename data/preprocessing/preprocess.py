@@ -83,7 +83,7 @@ class Preprocessor(threading.Thread):
                     resized.save(fname)
                     id_img += 1
                     if (which == 'train'):
-                        for i in xrange(max(2, min(3, int(1000/count)))):
+                        for i in xrange(max(2, min(3, int(500/count)))):
                             box = agitate(original.size, coordinates)
                             if invalid(box):
                                 continue
