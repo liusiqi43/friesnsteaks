@@ -16,9 +16,9 @@ hyper_params = {
     "save_path_best" : "experiments/model_%s_best.pkl" % strftime("%Y-%m-%d_%H:%M", gmtime()),
 
     "output_channels_h1": 32,
-    "output_channels_h2": 64,
-    "output_channels_h3": 72,
-    "output_channels_h4": 96,
+    "output_channels_h2": 48,
+    "output_channels_h3": 64,
+    "output_channels_h4": 64,
 
     "dim_h5": 30,
     "dim_h6": 30,
