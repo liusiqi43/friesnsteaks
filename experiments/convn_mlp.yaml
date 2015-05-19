@@ -53,12 +53,6 @@
                      dim: %(dim_h5)i,
                      sparse_init: %(sparse_init_h5)i
                  },
-                 !obj:pylearn2.models.mlp.RectifiedLinear {
-                     max_col_norm: 1.9365,
-                     layer_name: 'h6',
-                     dim: %(dim_h6)i,
-                     sparse_init: %(sparse_init_h6)i
-                 },
                  !obj:pylearn2.models.mlp.Sigmoid {
                      max_col_norm: 1.9365,
                      layer_name: 'y',

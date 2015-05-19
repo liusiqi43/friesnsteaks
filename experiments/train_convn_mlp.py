@@ -20,8 +20,8 @@ hyper_params = {
     "output_channels_h3": 72,
     "output_channels_h4": 96,
 
-    "dim_h5": 98,
-    "dim_h6": 98,
+    "dim_h5": 30,
+    "dim_h6": 30,
 
     "pool_stride_h1": 2,
     "pool_stride_h2": 2,
