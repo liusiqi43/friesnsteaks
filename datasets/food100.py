@@ -63,6 +63,8 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
             for label in image_to_labels[image]:
                 y[i][self.label_names.index(label)] = 1.
 
+            assert numpy.sum(y[i]) == 1.
+
         # by default, we load images and store them as ('b', 0, 1, 'c')
         default_axes = ('b', 0, 1, 'c')
         dim_transpose = [axes.index(axis) for axis in default_axes]

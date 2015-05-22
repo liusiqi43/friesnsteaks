@@ -83,12 +83,13 @@ class Preprocessor(threading.Thread):
                     resized.save(fname)
                     id_img += 1
                     if (which == 'train'):
-                        for i in xrange(max(2, min(3, int(500/count)))):
+                        for i in xrange(max(1, min(2, int(500/count)))):
                             box = agitate(original.size, coordinates)
                             if invalid(box):
                                 continue
                             cropped = original.crop(box)
-                            output = rotate(flip(cropped), -30, 30)
+                            #output = rotate(flip(cropped), -30, 30)
+                            output = flip(cropped)
                             resized = resize(output, self.to_size)
                             if resized is None:
                                 continue
