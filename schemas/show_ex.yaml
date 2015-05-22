@@ -1,6 +1,0 @@
-!obj:friesnsteaks.datasets.food100.FOOD100 {
-        which_set: 'test',
-        input_size: 48,
-        axes: ['b', 'c', 1, 0]
-}
-
