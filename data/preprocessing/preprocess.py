@@ -61,7 +61,7 @@ def get_box_centered(img, coordinates):
     x = (right - left)/2
     y = (down - high)/2
     extended = min(left - 0, high - 0, width - right, height - down)
-    isrotatable = extended>0.2*min(width,height)
+    isrotatable = extended>0.2*min(right-left,down-high)
     taille_big_square = min(extended + (x- right), extended + (y - high), extended + (left - x), extended + (down - y)
     coordinates[0]=x-taille_big_square
     coordinates[1]=y-taille_big_square
