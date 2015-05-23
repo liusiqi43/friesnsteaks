@@ -1,7 +1,7 @@
 from pylearn2.config import yaml_parse
 from time import gmtime, strftime
 
-# baseline model
+# dropout regularized model
 
 yaml = open("experiments/convn_mlp.yaml", 'r').read()
 
@@ -25,10 +25,10 @@ hyper_params = {
     "pool_side_h1": 8,
     "pool_side_h2": 8,
 
-    "kernel_side_h1": 6,
+    "kernel_side_h1": 5,
     "kernel_side_h2": 5,
 
-    "max_kernel_norm_h1": 1.9365,
+    "max_kernel_norm_h1": 0.9365,
     "max_kernel_norm_h2": 1.9365,
 
     "sparse_init_h3": 15,
