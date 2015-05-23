@@ -1,6 +1,7 @@
 from pylearn2.config import yaml_parse
 from time import gmtime, strftime
 
+# baseline model
 
 yaml = open("experiments/convn_mlp.yaml", 'r').read()
 
