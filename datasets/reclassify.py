@@ -32,7 +32,7 @@ def get_mapping():
         'sandwiches' : ['sandwich'],
         'udon noodle' : ['noodle soup'],
         'tempura udon': ['noodle soup'],
-        'soba noodle': ['noodle '],
+        'soba noodle': ['noodle'],
         'ramen noodle': ['noodle soup'],
         'beef noodle': ['noodle soup'],
         'fried noodle': ['noodle'],
@@ -46,7 +46,7 @@ def get_mapping():
         'miso soup' : ['soup'],
         'potage': ['potage'],
         'sausage' : ['sausage'],
-        'omelet': ['omelet'],
+        'omelet1': ['omelet'],
         'jiaozi': ['jiaozi'],
         'stew': ['stew'],
         'teriyaki grilled fish': ['grilled fish'],
@@ -72,7 +72,7 @@ def get_mapping():
         'spicy chili-flavored tofu': ['spicy chili-flavored tofu'],
         'yakitori': ['brochette'],
         'cabbage roll': ['cabbage roll'],
-        'omelet': ['omelet'],
+        'omelet2': ['omelet'],
         'egg sunny-side up': ['egg sunny-side up'],
         'natto': ['natto'],
         'cold tofu': ['tofu'],
@@ -104,7 +104,7 @@ def get_mapping():
         'dipping noodles': ['noodle'],
         'hot dog':['hot dog'],
         'french fries': ['french fries'],
-        'mixed rice': ['mixed rice']
+        'mixed rice': ['mixed rice'],
     }
     return mapping
 
@@ -149,7 +149,7 @@ def get_classes():
         'potage':  37,
         'sausage':  38,
         'oden':  39,
-        'omelet':  40,
+        'omelet1':  40,
         'ganmodoki':  41,
         'jiaozi':  42,
         'stew':  43,
@@ -176,7 +176,7 @@ def get_classes():
         'spicy chili-flavored tofu':  64,
         'yakitori':  65,
         'cabbage roll':  66,
-        'omelet':  67,
+        'omelet2':  67,
         'egg sunny-side up':  68,
         'natto':  69,
         'cold tofu':  70,
