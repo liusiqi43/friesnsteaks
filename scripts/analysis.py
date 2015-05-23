@@ -59,4 +59,5 @@ if __name__ == '__main__':
     fig, ax = plt.subplots()
     im = ax.imshow(data, cmap=plt.get_cmap('jet'), interpolation='none', vmin=0, vmax=1)
     fig.colorbar(im)
-    plt.savefig(sys.argv[1].split('.')[-2]+'.png', bbox_inches='tight')
+    fname = sys.argv[1].split('.')[-2]+'.png'
+    plt.savefig(os.path.join(os.path.dirname(sys.argv[1]), fname), bbox_inches='tight')
