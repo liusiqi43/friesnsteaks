@@ -8,7 +8,7 @@ hyper_params = {
     'axes': "['b', 0, 1, 'c']",
     "batch_size" : 25,
     'input_size': 96,
-    "nb_classes" : 64,
+    "nb_classes" : 63,
     "learning_rate" : 0.005,
     "save_path" : "experiments/model_%s_live.pkl" % strftime("%Y-%m-%d_%H:%M", gmtime()),
     "save_path_best" : "experiments/model_%s_best.pkl" % strftime("%Y-%m-%d_%H:%M", gmtime()),
