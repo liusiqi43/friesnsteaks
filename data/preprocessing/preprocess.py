@@ -52,6 +52,32 @@ def resize(img, to_size):
                                   (height+smaller_dimension)/2-1))
         return cropped_image.resize((to_size, to_size), Image.ANTIALIAS)
 
+def get_box_centered(img, coordinates):
+    left = coordinates[0]
+    high = coordinates[1]
+    right = coordinates[2]
+    down = coordinates[3]
+    width, height = img.size
+    x = (right - left)/2
+    y = (down - high)/2
+    extended = min(left - 0, high - 0, width - right, height - down)
+    isrotatable = extended>0.2*min(width,height)
+    taille_big_square = min(extended + (x- right), extended + (y - high), extended + (left - x), extended + (down - y)
+    coordinates[0]=x-taille_big_square
+    coordinates[1]=y-taille_big_square
+    coordinates[2]=x+taille_big_square
+    coordinates[3]=y+taille_big_square
+    
+    box_post_rotation[0]= extended
+    box_post_rotation[1]= extended
+    box_post_rotation[2]= extended + (right-left)
+    box_post_rotation[3] = extended + (down - high)
+    
+
+    return coordinates, isrotatable, box_post_rotation 
+
+
+
 class Preprocessor(threading.Thread):
     def __init__(self, to_size, begin, end, inputs):
         threading.Thread.__init__(self)
@@ -84,9 +110,23 @@ class Preprocessor(threading.Thread):
                     id_img += 1
                     if (which == 'train'):
                         for i in xrange(max(1, min(2, int(500/count)))):
+                            
                             box = agitate(original.size, coordinates)
                             if invalid(box):
                                 continue
+                            
+                            #Adrien
+                            cordinates_centered,isrotatable,new_box = get_box_centered(original,coordinates) 
+                            ready_to_be_rotated = original.crop(coordinates_centered)
+                            if not isrotatable:
+                                 continue
+                            output_rotated = rotate(ready_to_be_rotated,-30, 30)
+                            ready_to_be_resized = output_rotated.crop(new_box)
+                            
+                            resized_and_rotated = resize(output_ready_to_be_resized, self.to_size) 
+                            
+
+
                             cropped = original.crop(box)
                             #output = rotate(flip(cropped), -30, 30)
                             output = flip(cropped)
