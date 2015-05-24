@@ -70,10 +70,14 @@
             prop_decrease: 0.,
             N: 100
         },
-        cost: !obj:pylearn2.costs.mlp.dropout.Dropout {
-            input_include_probs: { 'h1' : .8 },
-            input_scales: { 'h1' : 1. }
+        cost: !obj:pylearn2.costs.cost.SumOfCosts { costs: [
+            !obj:pylearn2.costs.mlp.Default {}, 
+            !obj:pylearn2.costs.mlp.WeightDecay {
+                coeffs: [ .00005, .00005, .00005, .00005 ]
+            },
+            ]
         },
+        
     },
     extensions: [ 
         !obj:pylearn2.train_extensions.best_params.MonitorBasedSaveBest {
