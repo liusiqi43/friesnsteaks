@@ -85,11 +85,6 @@
             saturate: 250,
             final_momentum: .7
         },
-        !obj:pylearn2.training_algorithms.sgd.LinearDecayOverEpoch {
-            start: 1,
-            saturate: 500,
-            decay_factor: .01
-        },
     ],
     save_path: '%(save_path)s',
     save_freq: 1

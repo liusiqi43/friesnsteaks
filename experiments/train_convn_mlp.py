@@ -7,7 +7,7 @@ yaml = open("experiments/convn_mlp.yaml", 'r').read()
 
 hyper_params = {
     'axes': "['b', 0, 1, 'c']",
-    "batch_size" : 25,
+    "batch_size" : 125,
     'input_size': 96,
     "nb_classes" : 63,
     "learning_rate" : 0.005,
@@ -17,7 +17,7 @@ hyper_params = {
     "output_channels_h1": 32,
     "output_channels_h2": 64,
 
-    "dim_h3": 30,
+    "dim_h3": 1000,
 
     "pool_stride_h1": 2,
     "pool_stride_h2": 2,
