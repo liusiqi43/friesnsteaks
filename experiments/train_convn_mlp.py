@@ -28,9 +28,6 @@ hyper_params = {
     "kernel_side_h1": 5,
     "kernel_side_h2": 5,
 
-    "max_kernel_norm_h1": 0.9365,
-    "max_kernel_norm_h2": 1.9365,
-
     "sparse_init_h3": 15,
 }
 
