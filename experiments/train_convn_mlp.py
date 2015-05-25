@@ -1,9 +1,10 @@
 from pylearn2.config import yaml_parse
 from time import gmtime, strftime
 
-# L2-regularized model
-
 yaml = open('experiments/convn_mlp.yaml', 'r').read()
+model = strftime('%Y-%m-%d_%H:%M', gmtime())
+
+model_desc = '# Dropout model with max_norm constraints\n'
 
 hyper_params = {
     'axes': '[\'b\', 0, 1, \'c\']',
@@ -14,8 +15,8 @@ hyper_params = {
     'lr_decay_factor': 0.1,
     'init_momentum' : 0.7,
     'final_momentum': .99,
-    'save_path' : 'experiments/model_%s_live.pkl' % strftime('%Y-%m-%d_%H:%M', gmtime()),
-    'save_path_best' : 'experiments/model_%s_best.pkl' % strftime('%Y-%m-%d_%H:%M', gmtime()),
+    'save_path' : 'experiments/model_%s_live.pkl' % model,
+    'save_path_best' : 'experiments/model_%s_best.pkl' % model,
 
     'output_channels_h1': 32,
     'output_channels_h2': 64,
@@ -38,5 +39,10 @@ hyper_params = {
 }
 
 yaml = yaml % (hyper_params)
+
+with open('%s_schema.yaml' % model, 'w') as schema:
+    schema.write(model_desc)
+    schema.write(yaml)
+
 train = yaml_parse.load(yaml)
 train.main_loop()
