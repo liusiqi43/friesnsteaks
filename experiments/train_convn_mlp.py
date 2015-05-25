@@ -13,8 +13,10 @@ hyper_params = {
     'batch_size' : 25,
     'input_size': 96,
     'nb_classes' : 63,
-    'learning_rate' : 0.05,
-    'lr_decay_factor': 0.1,
+
+    'learning_rate' : 0.1,
+    'lr_decay_factor': 0.05,
+
     'init_momentum' : 0.7,
     'final_momentum': .99,
     'save_path' : os.path.join(__location__, 'model_%s_live.pkl' % model),
