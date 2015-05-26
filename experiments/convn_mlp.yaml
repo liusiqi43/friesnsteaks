@@ -33,13 +33,13 @@
                      layer_name: 'h3',
                      max_col_norm: %(max_col_norm_h3)f,
                      dim: %(dim_h3)i,
-                     irange: %(irange)f,
+                     sparse_init: %(sparse_init)i,
                  },
                  !obj:pylearn2.models.mlp.Softmax {
                      layer_name: 'y',
                      max_col_norm: %(max_col_norm_h3)f,
                      n_classes: %(nb_classes)i,
-                     irange: %(irange)f,
+                     istdev: %(istdev)f,
                  }
         ],
     },
@@ -89,7 +89,7 @@
         },
         !obj:pylearn2.training_algorithms.sgd.LinearDecayOverEpoch {
             start: 1,
-            saturate: 100,
+            saturate: 50,
             decay_factor: %(lr_decay_factor)f
         }
     ],
