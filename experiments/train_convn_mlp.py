@@ -14,8 +14,8 @@ hyper_params = {
     'input_size': 96,
     'nb_classes' : 63,
 
-    'learning_rate' : 0.1,
-    'lr_decay_factor': 0.05,
+    'learning_rate' : 0.05,
+    'lr_decay_factor': 0.1,
 
     'init_momentum' : 0.7,
     'final_momentum': .99,
@@ -24,7 +24,7 @@ hyper_params = {
     'output_channels_h1': 32,
     'output_channels_h2': 64,
 
-    'dim_h3': 100,
+    'dim_h3': 60,
 
     'pool_stride_h1': 2,
     'pool_stride_h2': 2,
@@ -39,7 +39,10 @@ hyper_params = {
     'max_kernel_norm_h2': 1.9,
     'max_col_norm_h3': 1.9365,
     'max_col_norm_y': 1.9365,
+
     'irange': .05,
+    'istdev': .05,
+    'sparse_init': 15,
 }
 
 yaml = yaml % (hyper_params)
