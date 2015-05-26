@@ -14,7 +14,7 @@
                  !obj:pylearn2.models.mlp.ConvRectifiedLinear {
                      layer_name: 'h1',
                      output_channels: %(output_channels_h1)i,
-                     irange: .005,
+                     irange: %(irange)f,
                      max_kernel_norm: %(max_kernel_norm_h1)f,
                      kernel_shape: [%(kernel_side_h1)i, %(kernel_side_h1)i],
                      pool_shape: [%(pool_side_h1)i, %(pool_side_h1)i],
@@ -23,7 +23,7 @@
                  !obj:pylearn2.models.mlp.ConvRectifiedLinear {
                      layer_name: 'h2',
                      output_channels: %(output_channels_h2)i,
-                     irange: .005,
+                     irange: %(irange)f,
                      max_kernel_norm: %(max_kernel_norm_h2)f,
                      kernel_shape: [%(kernel_side_h2)i, %(kernel_side_h2)i],
                      pool_shape: [%(pool_side_h2)i, %(pool_side_h2)i],
@@ -33,13 +33,13 @@
                      layer_name: 'h3',
                      max_col_norm: %(max_col_norm_h3)f,
                      dim: %(dim_h3)i,
-                     irange: .005,
+                     irange: %(irange)f,
                  },
                  !obj:pylearn2.models.mlp.Softmax {
                      layer_name: 'y',
                      max_col_norm: %(max_col_norm_h3)f,
                      n_classes: %(nb_classes)i,
-                     irange: .005,
+                     irange: %(irange)f,
                  }
         ],
     },
@@ -89,7 +89,7 @@
         },
         !obj:pylearn2.training_algorithms.sgd.LinearDecayOverEpoch {
             start: 1,
-            saturate: 50,
+            saturate: 100,
             decay_factor: %(lr_decay_factor)f
         }
     ],
