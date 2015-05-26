@@ -39,6 +39,7 @@ hyper_params = {
     'max_kernel_norm_h2': 1.9,
     'max_col_norm_h3': 1.9365,
     'max_col_norm_y': 1.9365
+    'irange': .05,
 }
 
 yaml = yaml % (hyper_params)
