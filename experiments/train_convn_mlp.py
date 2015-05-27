@@ -24,7 +24,8 @@ hyper_params = {
     'output_channels_h1': 32,
     'output_channels_h2': 64,
 
-    'dim_h3': 60,
+    'dim_h3': 120,
+    'dim_h4': 60,
 
     'pool_stride_h1': 2,
     'pool_stride_h2': 2,
@@ -38,6 +39,7 @@ hyper_params = {
     'max_kernel_norm_h1': 1.9,
     'max_kernel_norm_h2': 1.9,
     'max_col_norm_h3': 1.9365,
+    'max_col_norm_h4': 1.9365,
     'max_col_norm_y': 1.9365,
 
     'irange': .05,
