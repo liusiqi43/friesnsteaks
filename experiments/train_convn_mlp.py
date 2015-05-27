@@ -14,7 +14,7 @@ hyper_params = {
     'input_size': 96,
     'nb_classes' : 63,
 
-    'learning_rate' : 0.05,
+    'learning_rate' : 0.01,
     'lr_decay_factor': 0.1,
 
     'init_momentum' : 0.7,
@@ -32,7 +32,7 @@ hyper_params = {
     'pool_side_h1': 8,
     'pool_side_h2': 8,
 
-    'kernel_side_h1': 5,
+    'kernel_side_h1': 6,
     'kernel_side_h2': 5,
 
     'max_kernel_norm_h1': 1.9,
