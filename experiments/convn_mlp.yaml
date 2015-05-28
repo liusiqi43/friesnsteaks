@@ -77,9 +77,10 @@
             N: 20
         },
         cost: !obj:pylearn2.costs.cost.SumOfCosts { costs: [
-            !obj:pylearn2.costs.mlp.dropout.Dropout {
-                input_include_probs: { h1: .8 }
-            }
+            !obj:pylearn2.costs.mlp.Default {}, 
+            !obj:pylearn2.costs.mlp.WeightDecay {
+                coeffs: [.0005, .0005, .0005, .0005, .0005]
+            },
             ]
         },
     },
