@@ -15,6 +15,7 @@
                      layer_name: 'h0',
                      output_channels: %(output_channels_h0)i,
                      irange: %(irange)f,
+                     border_mode: 'full',
                      max_kernel_norm: %(max_norm)f,
                      kernel_shape: [%(kernel_side_h0)i, %(kernel_side_h0)i],
                      nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
@@ -23,6 +24,7 @@
                      layer_name: 'h1',
                      output_channels: %(output_channels_h1)i,
                      irange: %(irange)f,
+                     border_mode: 'full',
                      max_kernel_norm: %(max_norm)f,
                      kernel_shape: [%(kernel_side_conv)i, %(kernel_side_conv)i],
                      pool_type: 'max',
@@ -34,6 +36,7 @@
                      layer_name: 'h2',
                      output_channels: %(output_channels_h2)i,
                      irange: %(irange)f,
+                     border_mode: 'full',
                      max_kernel_norm: %(max_norm)f,
                      kernel_shape: [%(kernel_side_conv)i, %(kernel_side_conv)i],
                      nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
@@ -42,6 +45,7 @@
                      layer_name: 'h3',
                      output_channels: %(output_channels_h3)i,
                      irange: %(irange)f,
+                     border_mode: 'full',
                      max_kernel_norm: %(max_norm)f,
                      kernel_shape: [%(kernel_side_conv)i, %(kernel_side_conv)i],
                      pool_type: 'max',
@@ -98,7 +102,15 @@
         cost: !obj:pylearn2.costs.cost.SumOfCosts { costs: [
             !obj:pylearn2.costs.mlp.Default {}, 
             !obj:pylearn2.costs.mlp.WeightDecay {
-                coeffs: [.01, .01, .01, .01, .01, .01, .01]
+                coeffs: {
+                    'h0': .01, 
+                    'h1': .01, 
+                    'h2': .01, 
+                    'h3': .01, 
+                    'h4': .01, 
+                    'h5': .01, 
+                    'h6': .01,
+                }
             },
         ]},
     },
