@@ -109,7 +109,7 @@
                     'h3': %{weight_decay}f, 
                     'h4': %{weight_decay}f, 
                     'h5': %{weight_decay}f, 
-                    'h6': %{weight_decay}f,
+                    'y': %{weight_decay}f,
                 }
             },
         ]},
