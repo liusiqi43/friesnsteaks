@@ -11,39 +11,63 @@
             num_channels: 3, 
         },
         layers: [ 
-                 !obj:pylearn2.models.mlp.ConvRectifiedLinear {
+                 !obj:pylearn2.models.mlp.ConvElemwise {
+                     layer_name: 'h0',
+                     output_channels: %(output_channels_h0)i,
+                     irange: %(irange)f,
+                     border_mode: 'full',
+                     max_kernel_norm: %(max_norm)f,
+                     kernel_shape: [%(kernel_side_h0)i, %(kernel_side_h0)i],
+                     nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
+                 },
+                 !obj:pylearn2.models.mlp.ConvElemwise {
                      layer_name: 'h1',
                      output_channels: %(output_channels_h1)i,
                      irange: %(irange)f,
-                     max_kernel_norm: %(max_kernel_norm_h1)f,
-                     kernel_shape: [%(kernel_side_h1)i, %(kernel_side_h1)i],
-                     pool_shape: [%(pool_side_h1)i, %(pool_side_h1)i],
-                     pool_stride: [%(pool_stride_h1)i, %(pool_stride_h1)i],
-                 }, 
-                 !obj:pylearn2.models.mlp.ConvRectifiedLinear {
+                     border_mode: 'full',
+                     max_kernel_norm: %(max_norm)f,
+                     kernel_shape: [%(kernel_side_conv)i, %(kernel_side_conv)i],
+                     pool_type: 'max',
+                     pool_shape: [%(pool_side_conv)i, %(pool_side_conv)i],
+                     pool_stride: [%(pool_stride_conv)i, %(pool_stride_conv)i],
+                     nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
+                 },
+                 !obj:pylearn2.models.mlp.ConvElemwise {
                      layer_name: 'h2',
                      output_channels: %(output_channels_h2)i,
                      irange: %(irange)f,
-                     max_kernel_norm: %(max_kernel_norm_h2)f,
-                     kernel_shape: [%(kernel_side_h2)i, %(kernel_side_h2)i],
-                     pool_shape: [%(pool_side_h2)i, %(pool_side_h2)i],
-                     pool_stride: [%(pool_stride_h2)i, %(pool_stride_h2)i],
+                     border_mode: 'full',
+                     max_kernel_norm: %(max_norm)f,
+                     kernel_shape: [%(kernel_side_conv)i, %(kernel_side_conv)i],
+                     nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
                  },
-                 !obj:pylearn2.models.mlp.RectifiedLinear {
+                 !obj:pylearn2.models.mlp.ConvElemwise {
                      layer_name: 'h3',
-                     max_col_norm: %(max_col_norm_h3)f,
-                     dim: %(dim_h3)i,
-                     sparse_init: %(sparse_init)i,
+                     output_channels: %(output_channels_h3)i,
+                     irange: %(irange)f,
+                     border_mode: 'full',
+                     max_kernel_norm: %(max_norm)f,
+                     kernel_shape: [%(kernel_side_conv)i, %(kernel_side_conv)i],
+                     pool_type: 'max',
+                     pool_shape: [%(pool_side_conv)i, %(pool_side_conv)i],
+                     pool_stride: [%(pool_stride_conv)i, %(pool_stride_conv)i],
+                     nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
                  },
                  !obj:pylearn2.models.mlp.RectifiedLinear {
                      layer_name: 'h4',
-                     max_col_norm: %(max_col_norm_h4)f,
-                     dim: %(dim_h4)i,
+                     max_col_norm: %(max_norm)f,
+                     dim: %(output_channels_h4)i,
+                     sparse_init: %(sparse_init)i,
+                 },
+                 !obj:pylearn2.models.mlp.RectifiedLinear {
+                     layer_name: 'h5',
+                     max_col_norm: %(max_norm)f,
+                     dim: %(output_channels_h5)i,
                      sparse_init: %(sparse_init)i,
                  },
                  !obj:pylearn2.models.mlp.Softmax {
                      layer_name: 'y',
-                     max_col_norm: %(max_col_norm_h3)f,
+                     max_col_norm: %(max_norm)f,
                      n_classes: %(nb_classes)i,
                      istdev: %(istdev)f,
                  }
@@ -79,7 +103,7 @@
         cost: !obj:pylearn2.costs.cost.SumOfCosts { costs: [
             !obj:pylearn2.costs.mlp.Default {}, 
             !obj:pylearn2.costs.mlp.WeightDecay {
-                coeffs: [.005, .005, .005, .005, .005]
+                coeffs: [.01, .01, .01, .01, .01]
             },
             ]
         },
