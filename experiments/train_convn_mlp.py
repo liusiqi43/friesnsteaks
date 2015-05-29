@@ -32,8 +32,8 @@ hyper_params = {
     'kernel_side_h0': 6,
     'kernel_side_conv': 3,
 
+    'pool_side_conv': 3,
     'pool_stride_conv': 2,
-    'pool_side_conv': 2,
 
     'max_norm': 1.9365,
 
