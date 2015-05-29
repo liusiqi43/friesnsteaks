@@ -29,7 +29,7 @@ hyper_params = {
     'output_channels_h4': 256,
     'output_channels_h5': 256,
 
-    'kernel_side_h0': 6,
+    'kernel_side_h0': 5,
     'kernel_side_conv': 3,
 
     'pool_side_conv': 3,
@@ -37,11 +37,9 @@ hyper_params = {
 
     'max_norm': 1.9365,
 
-    'irange': .05,
-    'istdev': .05,
-    'sparse_init': 15,
+    'irange': .005,
 
-    'weight_decay': 0.005,
+    'weight_decay': .005,
 }
 
 yaml = yaml % (hyper_params)
