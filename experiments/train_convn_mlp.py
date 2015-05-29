@@ -29,7 +29,7 @@ hyper_params = {
     'output_channels_h4': 256,
     'output_channels_h5': 256,
 
-    'kernel_side_h0': 7,
+    'kernel_side_h0': 6,
     'kernel_side_conv': 3,
 
     'pool_stride_conv': 2,

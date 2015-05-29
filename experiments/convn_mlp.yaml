@@ -18,6 +18,7 @@
                      max_kernel_norm: %(max_norm)f,
                      kernel_shape: [%(kernel_side_h0)i, %(kernel_side_h0)i],
                      nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
+                     pad: 3,
                  },
                  !obj:pylearn2.models.mlp.ConvElemwise {
                      layer_name: 'h1',
@@ -29,6 +30,7 @@
                      pool_shape: [%(pool_side_conv)i, %(pool_side_conv)i],
                      pool_stride: [%(pool_stride_conv)i, %(pool_stride_conv)i],
                      nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
+                     pad: 1,
                  },
                  !obj:pylearn2.models.mlp.ConvElemwise {
                      layer_name: 'h2',
@@ -37,6 +39,7 @@
                      max_kernel_norm: %(max_norm)f,
                      kernel_shape: [%(kernel_side_conv)i, %(kernel_side_conv)i],
                      nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
+                     pad: 1,
                  },
                  !obj:pylearn2.models.mlp.ConvElemwise {
                      layer_name: 'h3',
@@ -48,6 +51,7 @@
                      pool_shape: [%(pool_side_conv)i, %(pool_side_conv)i],
                      pool_stride: [%(pool_stride_conv)i, %(pool_stride_conv)i],
                      nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
+                     pad: 1,
                  },
                  !obj:pylearn2.models.mlp.RectifiedLinear {
                      layer_name: 'h4',
