@@ -70,7 +70,7 @@
                      max_col_norm: %(max_norm)f,
                      n_classes: %(nb_classes)i,
                      istdev: %(istdev)f,
-                 }
+                 },
         ],
     },
     algorithm: !obj:pylearn2.training_algorithms.sgd.SGD {
@@ -81,8 +81,7 @@
         },
         train_iteration_mode: even_shuffled_sequential,
         monitor_iteration_mode: even_shuffled_sequential,
-        monitoring_dataset: 
-          {
+        monitoring_dataset: {
             'train': *train,
             'valid': !obj:datasets.food100.FOOD100 {
                 which_set: 'valid',
@@ -94,7 +93,7 @@
                 input_size: %(input_size)i,
                 axes: %(axes)s
             },
-          },
+        },
         termination_criterion: !obj:pylearn2.termination_criteria.MonitorBased {
             channel_name: 'valid_y_misclass',
             prop_decrease: 0.0,
@@ -103,10 +102,9 @@
         cost: !obj:pylearn2.costs.cost.SumOfCosts { costs: [
             !obj:pylearn2.costs.mlp.Default {}, 
             !obj:pylearn2.costs.mlp.WeightDecay {
-                coeffs: [.01, .01, .01, .01, .01]
+                coeffs: [.01, .01, .01, .01, .01, .01, .01]
             },
-            ]
-        },
+        ]},
     },
     extensions: [ 
         !obj:pylearn2.train_extensions.best_params.MonitorBasedSaveBest {
