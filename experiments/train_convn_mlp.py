@@ -39,7 +39,7 @@ hyper_params = {
 
     'max_norm': 1.9365,
 
-    'irange': .05,
+    'irange': .3,
 
     'weight_decay': .01,
 }
