@@ -10,11 +10,11 @@ model_desc = '#Architecture inspired by stanford guide\n'
 
 hyper_params = {
     'axes': '[\'b\', 0, 1, \'c\']',
-    'batch_size' : 128,
+    'batch_size' : 25,
     'input_size': 64,
     'nb_classes' : 63,
 
-    'learning_rate' : .01,
+    'learning_rate' : .04,
     'lr_decay_factor': .1,
 
     'init_momentum' : .5,
@@ -26,8 +26,10 @@ hyper_params = {
     'output_channels_h1': 32,
     'output_channels_h2': 64,
     'output_channels_h3': 64,
-    'output_channels_h4': 256,
-    'output_channels_h5': 256,
+    'output_channels_h4': 128,
+    'output_channels_h5': 128,
+    'output_channels_h6': 256,
+    'output_channels_h7': 256,
 
     'kernel_side_h0': 5,
     'kernel_side_conv': 3,
@@ -37,9 +39,9 @@ hyper_params = {
 
     'max_norm': 1.9365,
 
-    'irange': .005,
+    'irange': .05,
 
-    'weight_decay': .005,
+    'weight_decay': .01,
 }
 
 yaml = yaml % (hyper_params)
