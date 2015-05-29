@@ -103,13 +103,13 @@
             !obj:pylearn2.costs.mlp.Default {}, 
             !obj:pylearn2.costs.mlp.WeightDecay {
                 coeffs: {
-                    'h0': .01, 
-                    'h1': .01, 
-                    'h2': .01, 
-                    'h3': .01, 
-                    'h4': .01, 
-                    'h5': .01, 
-                    'h6': .01,
+                    'h0': %{weight_decay}f, 
+                    'h1': %{weight_decay}f, 
+                    'h2': %{weight_decay}f, 
+                    'h3': %{weight_decay}f, 
+                    'h4': %{weight_decay}f, 
+                    'h5': %{weight_decay}f, 
+                    'h6': %{weight_decay}f,
                 }
             },
         ]},

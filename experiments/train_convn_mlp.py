@@ -10,7 +10,7 @@ model_desc = '#Architecture inspired by stanford guide\n'
 
 hyper_params = {
     'axes': '[\'b\', 0, 1, \'c\']',
-    'batch_size' : 50,
+    'batch_size' : 128,
     'input_size': 64,
     'nb_classes' : 63,
 
@@ -40,6 +40,8 @@ hyper_params = {
     'irange': .05,
     'istdev': .05,
     'sparse_init': 15,
+
+    'weight_decay': 0.005,
 }
 
 yaml = yaml % (hyper_params)
