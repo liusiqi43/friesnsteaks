@@ -10,7 +10,7 @@ model_desc = '#Architecture inspired by stanford guide with dropout\n'
 
 hyper_params = {
     'axes': '[\'b\', 0, 1, \'c\']',
-    'batch_size' : 25,
+    'batch_size' : 32,
     'input_size': 64,
     'nb_classes' : 63,
 

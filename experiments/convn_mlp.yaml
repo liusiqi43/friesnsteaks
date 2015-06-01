@@ -68,13 +68,13 @@
                      pool_stride: [%(pool_stride_conv)i, %(pool_stride_conv)i],
                      nonlinearity: !obj:pylearn2.models.mlp.SigmoidConvNonlinearity {},
                  },
-                 !obj:pylearn2.models.mlp.RectifiedLinear {
+                 !obj:pylearn2.models.mlp.Sigmoid {
                      layer_name: 'h6',
                      max_col_norm: %(max_norm)f,
                      dim: %(output_channels_h4)i,
                      irange: %(irange)f,
                  },
-                 !obj:pylearn2.models.mlp.RectifiedLinear {
+                 !obj:pylearn2.models.mlp.Sigmoid {
                      layer_name: 'h7',
                      max_col_norm: %(max_norm)f,
                      dim: %(output_channels_h5)i,
