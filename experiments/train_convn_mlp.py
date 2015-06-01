@@ -32,7 +32,7 @@ hyper_params = {
     'output_channels_h7': 512,
 
     'kernel_side_h0': 7,
-    'kernel_side_conv': 5,
+    'kernel_side_conv': 3,
 
     'pool_side_conv': 3,
     'pool_stride_conv': 2,
