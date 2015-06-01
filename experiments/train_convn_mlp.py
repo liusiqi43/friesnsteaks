@@ -17,8 +17,8 @@ hyper_params = {
     'learning_rate' : .1,
     'lr_decay_factor': .1,
 
-    'init_momentum' : .8,
-    'final_momentum': .99,
+    'init_momentum' : .5,
+    'final_momentum': .7,
     'save_path' : os.path.join(__location__, 'model_%s_live.pkl' % model),
     'save_path_best' : os.path.join(__location__, 'model_%s_best.pkl' % model),
 
@@ -42,8 +42,6 @@ hyper_params = {
     'max_norm': 1.9365,
 
     'irange': .005,
-
-    'weight_decay': .01,
 }
 
 yaml = yaml % (hyper_params)
