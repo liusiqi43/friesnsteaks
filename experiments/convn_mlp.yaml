@@ -11,73 +11,47 @@
             num_channels: 3, 
         },
         layers: [ 
-                 !obj:pylearn2.models.mlp.ConvElemwise {
+                 !obj:pylearn2.models.maxout.MaxoutConvC01B {
                      layer_name: 'h0',
-                     output_channels: %(output_channels_h0)i,
+                     pad: %(pad_h0)i,
+                     tied_b: 1,
+                     num_channels: %(num_channels_h0)i,
+                     num_pieces: %(num_pieces_conv)i,
                      irange: %(irange)f,
                      max_kernel_norm: %(max_norm)f,
                      kernel_shape: [%(kernel_side_h0)i, %(kernel_side_h0)i],
-                     nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
+                     pool_shape: [%(pool_side_conv)i, %(pool_side_conv)i],
+                     pool_stride: [%(pool_stride_conv)i, %(pool_stride_conv)i],
                  },
-                 !obj:pylearn2.models.mlp.ConvElemwise {
+                 !obj:pylearn2.models.maxout.MaxoutConvC01B {
                      layer_name: 'h1',
-                     output_channels: %(output_channels_h1)i,
+                     pad: %(pad_conv)i,
+                     tied_b: 1,
+                     num_channels: %(num_channels_h1)i,
+                     num_pieces: %(num_pieces_conv)i,
                      irange: %(irange)f,
                      max_kernel_norm: %(max_norm)f,
                      kernel_shape: [%(kernel_side_conv)i, %(kernel_side_conv)i],
-                     pool_type: 'max',
                      pool_shape: [%(pool_side_conv)i, %(pool_side_conv)i],
                      pool_stride: [%(pool_stride_conv)i, %(pool_stride_conv)i],
-                     nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
                  },
-                 !obj:pylearn2.models.mlp.ConvElemwise {
+                 !obj:pylearn2.models.maxout.MaxoutConvC01B {
                      layer_name: 'h2',
-                     output_channels: %(output_channels_h2)i,
+                     pad: %(pad_conv)i,
+                     tied_b: 1,
+                     num_channels: %(num_channels_h2)i,
+                     num_pieces: %(num_pieces_conv)i,
                      irange: %(irange)f,
                      max_kernel_norm: %(max_norm)f,
                      kernel_shape: [%(kernel_side_conv)i, %(kernel_side_conv)i],
-                     nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
+                     pool_shape: [%(pool_side_conv)i, %(pool_side_conv)i],
+                     pool_stride: [%(pool_stride_conv)i, %(pool_stride_conv)i],
                  },
-                 !obj:pylearn2.models.mlp.ConvElemwise {
+                 !obj:pylearn2.models.maxout.Maxout {
                      layer_name: 'h3',
-                     output_channels: %(output_channels_h3)i,
-                     irange: %(irange)f,
-                     max_kernel_norm: %(max_norm)f,
-                     kernel_shape: [%(kernel_side_conv)i, %(kernel_side_conv)i],
-                     pool_type: 'max',
-                     pool_shape: [%(pool_side_conv)i, %(pool_side_conv)i],
-                     pool_stride: [%(pool_stride_conv)i, %(pool_stride_conv)i],
-                     nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
-                 },
-                 !obj:pylearn2.models.mlp.ConvElemwise {
-                     layer_name: 'h4',
-                     output_channels: %(output_channels_h2)i,
-                     irange: %(irange)f,
-                     max_kernel_norm: %(max_norm)f,
-                     kernel_shape: [%(kernel_side_conv)i, %(kernel_side_conv)i],
-                     nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
-                 },
-                 !obj:pylearn2.models.mlp.ConvElemwise {
-                     layer_name: 'h5',
-                     output_channels: %(output_channels_h3)i,
-                     irange: %(irange)f,
-                     max_kernel_norm: %(max_norm)f,
-                     kernel_shape: [%(kernel_side_conv)i, %(kernel_side_conv)i],
-                     pool_type: 'max',
-                     pool_shape: [%(pool_side_conv)i, %(pool_side_conv)i],
-                     pool_stride: [%(pool_stride_conv)i, %(pool_stride_conv)i],
-                     nonlinearity: !obj:pylearn2.models.mlp.RectifierConvNonlinearity {},
-                 },
-                 !obj:pylearn2.models.mlp.RectifiedLinear {
-                     layer_name: 'h6',
                      max_col_norm: %(max_norm)f,
-                     dim: %(output_channels_h4)i,
-                     irange: %(irange)f,
-                 },
-                 !obj:pylearn2.models.mlp.RectifiedLinear {
-                     layer_name: 'h7',
-                     max_col_norm: %(max_norm)f,
-                     dim: %(output_channels_h5)i,
+                     num_units: %(num_units_h3)i,
+                     num_pieces: %(num_pieces_maxout)i,
                      irange: %(irange)f,
                  },
                  !obj:pylearn2.models.mlp.Softmax {
@@ -114,10 +88,9 @@
             prop_decrease: 0.0,
             N: 20
         },
-        cost: !obj:pylearn2.costs.cost.SumOfCosts { costs: [
-            !obj:pylearn2.costs.mlp.dropout.Dropout {
-                input_include_probs: { h0: .8 }
-            }]
+        cost: !obj:pylearn2.costs.mlp.dropout.Dropout {
+            input_include_probs: { 'h0' : .8 },
+            input_scales: { 'h0' : 1. }
         },
     },
     extensions: [ 

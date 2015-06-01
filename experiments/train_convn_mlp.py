@@ -9,7 +9,7 @@ model = strftime('%Y-%m-%d_%H:%M', gmtime())
 model_desc = '#Architecture inspired by stanford guide with dropout\n'
 
 hyper_params = {
-    'axes': '[\'b\', 0, 1, \'c\']',
+    'axes': '["c", 0, 1, "b"]',
     'batch_size' : 25,
     'input_size': 64,
     'nb_classes' : 63,
@@ -22,24 +22,26 @@ hyper_params = {
     'save_path' : os.path.join(__location__, 'model_%s_live.pkl' % model),
     'save_path_best' : os.path.join(__location__, 'model_%s_best.pkl' % model),
 
-    'output_channels_h0': 32,
-    'output_channels_h1': 32,
-    'output_channels_h2': 64,
-    'output_channels_h3': 64,
-    'output_channels_h4': 128,
-    'output_channels_h5': 128,
-    'output_channels_h6': 256,
-    'output_channels_h7': 256,
+    'num_channels_h0': 64,
+    'num_channels_h1': 128,
+    'num_channels_h2': 256,
 
-    'kernel_side_h0': 5,
-    'kernel_side_conv': 3,
+    'num_units_h3': 512,
+
+    'kernel_side_h0': 7,
+    'pad_h0': 3,
+    'kernel_side_conv': 5,
+    'pad_conv': 2,
+
+    'num_pieces_conv': 2,
+    'num_pieces_maxout': 5,
 
     'pool_side_conv': 3,
     'pool_stride_conv': 2,
 
     'max_norm': 1.9365,
 
-    'irange': .3,
+    'irange': .005,
 
     'weight_decay': .01,
 }
