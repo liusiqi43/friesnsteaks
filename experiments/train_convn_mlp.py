@@ -9,25 +9,25 @@ model = strftime('%Y-%m-%d_%H:%M', gmtime())
 model_desc = '#Architecture inspired by stanford guide with dropout\n'
 
 hyper_params = {
-    'axes': '[\'b\', 0, 1, \'c\']',
+    'axes': '["b", 0, 1, "c"]',
     'batch_size' : 32,
     'input_size': 64,
     'nb_classes' : 63,
 
-    'learning_rate' : .1,
+    'learning_rate' : .04,
     'lr_decay_factor': .1,
 
-    'init_momentum' : .8,
-    'final_momentum': .99,
+    'init_momentum' : .5,
+    'final_momentum': .7,
     'save_path' : os.path.join(__location__, 'model_%s_live.pkl' % model),
     'save_path_best' : os.path.join(__location__, 'model_%s_best.pkl' % model),
 
-    'output_channels_h0': 32,
-    'output_channels_h1': 32,
-    'output_channels_h2': 64,
-    'output_channels_h3': 64,
-    'output_channels_h4': 128,
-    'output_channels_h5': 128,
+    'output_channels_h0': 256,
+    'output_channels_h1': 256,
+    'output_channels_h2': 256,
+    'output_channels_h3': 256,
+    'output_channels_h4': 256,
+    'output_channels_h5': 256,
     'output_channels_h6': 256,
     'output_channels_h7': 256,
 
@@ -39,9 +39,9 @@ hyper_params = {
 
     'max_norm': 1.9365,
 
-    'irange': .3,
+    'irange': .005,
 
-    'weight_decay': .01,
+    'weight_decay': .005,
 }
 
 yaml = yaml % (hyper_params)
