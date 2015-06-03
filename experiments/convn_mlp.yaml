@@ -36,6 +36,9 @@
                      irange: %(irange)f,
                      max_kernel_norm: %(max_norm)f,
                      kernel_shape: [%(kernel_side_conv)i, %(kernel_side_conv)i],
+                     pool_type: 'max',
+                     pool_shape: [%(pool_side_conv)i, %(pool_side_conv)i],
+                     pool_stride: [%(pool_stride_conv)i, %(pool_stride_conv)i],
                      nonlinearity: !obj:pylearn2.models.mlp.SigmoidConvNonlinearity {},
                  },
                  !obj:pylearn2.models.mlp.ConvElemwise {
@@ -49,35 +52,16 @@
                      pool_stride: [%(pool_stride_conv)i, %(pool_stride_conv)i],
                      nonlinearity: !obj:pylearn2.models.mlp.SigmoidConvNonlinearity {},
                  },
-                 !obj:pylearn2.models.mlp.ConvElemwise {
+                 !obj:pylearn2.models.mlp.RectifiedLinear {
                      layer_name: 'h4',
-                     output_channels: %(output_channels_h4)i,
+                     max_col_norm: %(max_norm)f,
+                     dim: %(dim_h4)i,
                      irange: %(irange)f,
-                     max_kernel_norm: %(max_norm)f,
-                     kernel_shape: [%(kernel_side_conv)i, %(kernel_side_conv)i],
-                     nonlinearity: !obj:pylearn2.models.mlp.SigmoidConvNonlinearity {},
                  },
-                 !obj:pylearn2.models.mlp.ConvElemwise {
+                 !obj:pylearn2.models.mlp.RectifiedLinear {
                      layer_name: 'h5',
-                     output_channels: %(output_channels_h5)i,
-                     irange: %(irange)f,
-                     max_kernel_norm: %(max_norm)f,
-                     kernel_shape: [%(kernel_side_conv)i, %(kernel_side_conv)i],
-                     pool_type: 'max',
-                     pool_shape: [%(pool_side_conv)i, %(pool_side_conv)i],
-                     pool_stride: [%(pool_stride_conv)i, %(pool_stride_conv)i],
-                     nonlinearity: !obj:pylearn2.models.mlp.SigmoidConvNonlinearity {},
-                 },
-                 !obj:pylearn2.models.mlp.Sigmoid {
-                     layer_name: 'h6',
                      max_col_norm: %(max_norm)f,
-                     dim: %(output_channels_h6)i,
-                     irange: %(irange)f,
-                 },
-                 !obj:pylearn2.models.mlp.Sigmoid {
-                     layer_name: 'h7',
-                     max_col_norm: %(max_norm)f,
-                     dim: %(output_channels_h7)i,
+                     dim: %(dim_h5)i,
                      irange: %(irange)f,
                  },
                  !obj:pylearn2.models.mlp.Softmax {
@@ -118,13 +102,13 @@
             !obj:pylearn2.costs.mlp.Default {}, 
             !obj:pylearn2.costs.mlp.WeightDecay {
                 coeffs: {
-                    'h0': %(weight_decay)f, 
-                    'h1': %(weight_decay)f, 
-                    'h2': %(weight_decay)f, 
-                    'h3': %(weight_decay)f, 
-                    'h4': %(weight_decay)f, 
-                    'h5': %(weight_decay)f, 
-                    'y': %(weight_decay)f,
+                    h0: %(weight_decay)f, 
+                    h1: %(weight_decay)f, 
+                    h2: %(weight_decay)f, 
+                    h3: %(weight_decay)f, 
+                    h4: %(weight_decay)f, 
+                    h5: %(weight_decay)f, 
+                    y: %(weight_decay)f,
                 }
             },
         ]},
