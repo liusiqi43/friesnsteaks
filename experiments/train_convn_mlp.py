@@ -14,7 +14,7 @@ hyper_params = {
     'input_size': 64,
     'nb_classes' : 63,
 
-    'learning_rate' : .03,
+    'learning_rate' : .01,
     'lr_decay_factor': .1,
 
     'init_momentum' : .5,
@@ -39,7 +39,7 @@ hyper_params = {
 
     'max_norm': 1.9365,
 
-    'irange': .005,
+    'irange': .05,
 
     'weight_decay': .005,
 }
