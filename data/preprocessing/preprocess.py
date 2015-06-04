@@ -37,10 +37,6 @@ def sure_flip(input_image):
     methods = [Image.FLIP_LEFT_RIGHT]
     return input_image.transpose(choice(methods))
 
-def agitate(size, box):
-    new_box = [int(point + uniform(-10, 10) + .5) for point in box]
-    return cramp(size, new_box)
-
 def cramp(size, box):
     box[0] = max(0, min(size[1]-1, box[0]))
     box[2] = max(0, min(size[1]-1, box[2]))
@@ -59,15 +55,9 @@ def resize(img, to_size):
         return cropped_image.resize((to_size, to_size), Image.ANTIALIAS)
 
 
-def brighten(img,i):
+def brighten(img):
     enhancer = ImageEnhance.Brightness(img)
-
-    if (i == 1):
-       return flip(enhancer.enhance(0.8))
-    if (i == 2):
-       return flip(enhancer.enhance(1.2))
-    else:
-       return img
+    return enhancer.enhance(0.7 + random.random() * 0.6)
 
 def get_box_centered(img, coordinates):
     left = coordinates[0]
@@ -78,7 +68,7 @@ def get_box_centered(img, coordinates):
     x = left + (right - left)/2
     y = high + (down - high)/2
     extended = min(left - 0, high - 0, width - right, height - down)
-    taille_big_square = min(extended + abs(x- right), extended + abs(y - high), extended + abs(left - x), extended + abs(down - y)) 
+    taille_big_square = min(extended + abs(x- right), extended + abs(y - high), extended + abs(left - x), extended + abs(down - y))
     isrotatable = (2*taille_big_square >= (1.41*min(right-left, down-high)))
     coordinates[0]=x-taille_big_square
     coordinates[1]=y-taille_big_square
@@ -86,7 +76,19 @@ def get_box_centered(img, coordinates):
     coordinates[3]=y+taille_big_square
     box_post_rotation= [extended, extended, extended + (right-left), extended + (down - high)]
 
-    return coordinates, isrotatable, box_post_rotation 
+    return coordinates, isrotatable, box_post_rotation
+
+
+def rotate(original, coordinates_centered, new_box):
+    ready_to_be_rotated = original.crop(coordinates_centered)
+    output_rotated = rotate(ready_to_be_rotated, -30, 30)
+
+    width, height = output_rotated.size
+    x = width/2
+    y = height/2
+    x_delta, y_delta = (new_box[2]-new_box[0])/2, (new_box[3]-new_box[1])/2
+    new_box = [x-x_delta, y-y_delta, x+x_delta, y+y_delta]
+    return output_rotated.crop(new_box)
 
 
 
@@ -111,48 +113,47 @@ class Preprocessor(threading.Thread):
                     which = which_set()
                     split = map(int, line.split())
                     input_id, coordinates = split[0], split[1:]
-                    
+
                     input_image = 'data/food100/%s/%d.jpg' % (class_id, input_id)
                     original = Image.open(input_image)
                     fname = 'data/food100/output_%d/%s/img_%s_%d.jpg' \
                         % (self.to_size, which, class_id, id_img)
                     resized = resize(original.crop(coordinates), self.to_size)
+                    # Image cannot be resized. We drop this image.
                     if resized is None:
                         continue
+                    # For train/valid/test, we always save one original image
                     resized.save(fname)
                     id_img += 1
+
+                    # We generate a few variants of the orignal image.
                     if (which == 'train'):
-                        for i in xrange(max(3, min(4, int(500/count)))):
+                        # For train, we always save one original image, but flipped
+                        fname = 'data/food100/output_%d/%s/img_%s_%d.jpg' \
+                            % (self.to_size, which, class_id, id_img)
+                        resized.transpose(Image.FLIP_LEFT_RIGHT).save(fname)
+                        id_img += 1
+
+                        # then we create a few random variants
+                        for i in xrange(max(5, min(6, int(500/count)))):
                             box = coordinates
-                            #box = agitate(original.size, coordinates)
-                            if invalid(box):
-                                continue
-                            
-			    coordinates_centered,isrotatable,new_box = get_box_centered(original,box[:]) 
-			    ready_to_be_resized = None
+
+                            # Can we rotate the image?
+			    coordinates_centered, isrotatable, new_box = get_box_centered(original,box[:])
                             if isrotatable:
-                            	ready_to_be_rotated = original.crop(coordinates_centered)
-                                output_rotated = rotate(ready_to_be_rotated,-30, 30)
-                                
-                                width, height = output_rotated.size 
-                                x = width/2
-                                y = height/2
-				x_delta, y_delta = (new_box[2]-new_box[0])/2, (new_box[3]-new_box[1])/2 
-                                new_box = [x-x_delta, y-y_delta, x+x_delta, y+y_delta]
-                            	ready_to_be_resized = flip(output_rotated.crop(new_box))
-                            
-                            else:
-                                ready_to_be_resized = sure_flip(original.crop(coordinates))
-                            resized = brighten(resize(ready_to_be_resized, self.to_size),i) 
-                        
+                                rotated = rotate(original, coordinates_centered, new_box)
+                                # resized now refer to either: randomly rotated, resized image, or resized original image
+                                resized = resize(rotated, self.to_size)
+
                             if resized is None:
+                                # This happens when rotated is too narrow to crop the center square. We skip.
                                 continue
+
+                            # Change the brightness, and flip with 1/2 probability
+                            resized = flip(brighten(resized))
+
                             fname = 'data/food100/output_%d/%s/img_%s_%d.jpg' \
                                 % (self.to_size, which, class_id, id_img)
-                             
-                            if not isrotatable:
-                                 if (i==3):
-				     continue
                             resized.save(fname)
                             id_img += 1
                 print 'Working on %s with %d images, generated %d images' \
