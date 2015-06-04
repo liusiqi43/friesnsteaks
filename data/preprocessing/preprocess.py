@@ -1,4 +1,5 @@
 from PIL import Image
+from PIL import ImageEnhance
 from glob import glob
 from random import choice, random, uniform, randint
 
@@ -56,6 +57,17 @@ def resize(img, to_size):
                                   (width+smaller_dimension)/2-1, \
                                   (height+smaller_dimension)/2-1))
         return cropped_image.resize((to_size, to_size), Image.ANTIALIAS)
+
+
+def brighten(img,i):
+    enhancer = ImageEnhance.Brightness(img)
+
+    if (i == 1):
+       return flip(enhancer.enhance(0.8))
+    if (i == 2):
+       return flip(enhancer.enhance(1.2))
+    else:
+       return img
 
 def get_box_centered(img, coordinates):
     left = coordinates[0]
@@ -131,18 +143,17 @@ class Preprocessor(threading.Thread):
                             
                             else:
                                 ready_to_be_resized = sure_flip(original.crop(coordinates))
-                            resized = resize(ready_to_be_resized, self.to_size) 
-                            
+                            resized = brighten(resize(ready_to_be_resized, self.to_size),i) 
+                        
                             if resized is None:
                                 continue
                             fname = 'data/food100/output_%d/%s/img_%s_%d.jpg' \
                                 % (self.to_size, which, class_id, id_img)
-                            
-                            
-                            resized.save(fname)
-                            
+                             
                             if not isrotatable:
-                                 continue
+                                 if (i==3):
+				     continue
+                            resized.save(fname)
                             id_img += 1
                 print 'Working on %s with %d images, generated %d images' \
                     % (item, count, id_img)
