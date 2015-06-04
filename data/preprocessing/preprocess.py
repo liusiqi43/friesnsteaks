@@ -57,7 +57,7 @@ def resize(img, to_size):
 
 def brighten(img):
     enhancer = ImageEnhance.Brightness(img)
-    return enhancer.enhance(0.8 + random() * 0.4)
+    return enhancer.enhance(0.9 + random() * 0.2)
 
 def get_box_centered(img, coordinates):
     left = coordinates[0]
@@ -81,7 +81,7 @@ def get_box_centered(img, coordinates):
 
 def rotate(original, coordinates_centered, new_box):
     ready_to_be_rotated = original.crop(coordinates_centered)
-    output_rotated = random_rotate(ready_to_be_rotated, -90, 90)
+    output_rotated = random_rotate(ready_to_be_rotated, -60, 60)
 
     width, height = output_rotated.size
     x = width/2
@@ -135,7 +135,7 @@ class Preprocessor(threading.Thread):
                         id_img += 1
 
                         # then we create a few random variants
-                        for i in xrange(max(5, min(6, int(500/count)))):
+                        for i in xrange(max(2, min(3, int(500/count)))):
                             box = coordinates
 
                             # Can we rotate the image?
