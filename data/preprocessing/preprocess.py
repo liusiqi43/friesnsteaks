@@ -57,7 +57,7 @@ def resize(img, to_size):
 
 def brighten(img):
     enhancer = ImageEnhance.Brightness(img)
-    return enhancer.enhance(0.7 + random() * 0.6)
+    return enhancer.enhance(0.8 + random() * 0.4)
 
 def get_box_centered(img, coordinates):
     left = coordinates[0]
@@ -81,7 +81,7 @@ def get_box_centered(img, coordinates):
 
 def rotate(original, coordinates_centered, new_box):
     ready_to_be_rotated = original.crop(coordinates_centered)
-    output_rotated = random_rotate(ready_to_be_rotated, -30, 30)
+    output_rotated = random_rotate(ready_to_be_rotated, -90, 90)
 
     width, height = output_rotated.size
     x = width/2
