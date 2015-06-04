@@ -11,7 +11,7 @@ model_desc = '#Architecture inspired by stanford guide with dropout\n'
 hyper_params = {
     'axes': '["b", 0, 1, "c"]',
     'batch_size' : 32,
-    'input_size': 64,
+    'input_size': 32,
     'nb_classes' : 63,
 
     'learning_rate' : .005,
@@ -32,12 +32,12 @@ hyper_params = {
     'kernel_side_h0': 5,
     'kernel_side_conv': 3,
 
-    'pool_side_conv': 3,
+    'pool_side_conv': 2,
     'pool_stride_conv': 2,
 
     'max_norm': 1.9365,
 
-    'irange': .005,
+    'irange': .3,
 
     'weight_decay': .005,
 }
