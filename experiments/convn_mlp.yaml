@@ -41,13 +41,13 @@
                  !obj:pylearn2.models.mlp.RectifiedLinear {
                      layer_name: 'h3',
                      max_col_norm: %(max_norm)f,
-                     dim: %(dim_h4)i,
+                     dim: %(dim_h3)i,
                      irange: %(irange)f,
                  },
                  !obj:pylearn2.models.mlp.RectifiedLinear {
                      layer_name: 'h4',
                      max_col_norm: %(max_norm)f,
-                     dim: %(dim_h5)i,
+                     dim: %(dim_h4)i,
                      irange: %(irange)f,
                  },
                  !obj:pylearn2.models.mlp.Softmax {
@@ -93,7 +93,6 @@
                     h2: %(weight_decay)f, 
                     h3: %(weight_decay)f, 
                     h4: %(weight_decay)f, 
-                    h5: %(weight_decay)f, 
                     y: %(weight_decay)f,
                 }
             },

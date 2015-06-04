@@ -26,8 +26,8 @@ hyper_params = {
     'output_channels_h1': 256,
     'output_channels_h2': 512,
 
+    'dim_h3': 1024,
     'dim_h4': 1024,
-    'dim_h5': 1024,
 
     'kernel_side_h0': 5,
     'kernel_side_conv': 3,
