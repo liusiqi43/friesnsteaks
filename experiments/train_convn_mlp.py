@@ -22,10 +22,9 @@ hyper_params = {
     'save_path' : os.path.join(__location__, 'model_%s_live.pkl' % model),
     'save_path_best' : os.path.join(__location__, 'model_%s_best.pkl' % model),
 
-    'output_channels_h0': 64,
-    'output_channels_h1': 128,
-    'output_channels_h2': 256,
-    'output_channels_h3': 512,
+    'output_channels_h0': 128,
+    'output_channels_h1': 256,
+    'output_channels_h2': 512,
 
     'dim_h4': 1024,
     'dim_h5': 1024,
