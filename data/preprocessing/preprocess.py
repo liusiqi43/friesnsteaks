@@ -22,7 +22,7 @@ def invalid(box):
     min_size = 30
     return box[0]+min_size >= box[2] or box[1]+min_size >= box[3]
 
-def rotate(input_image, start, end):
+def random_rotate(input_image, start, end):
     return input_image.rotate(randint(start, end))
 
 def flip(input_image):
@@ -57,7 +57,7 @@ def resize(img, to_size):
 
 def brighten(img):
     enhancer = ImageEnhance.Brightness(img)
-    return enhancer.enhance(0.7 + random.random() * 0.6)
+    return enhancer.enhance(0.7 + random() * 0.6)
 
 def get_box_centered(img, coordinates):
     left = coordinates[0]
@@ -81,7 +81,7 @@ def get_box_centered(img, coordinates):
 
 def rotate(original, coordinates_centered, new_box):
     ready_to_be_rotated = original.crop(coordinates_centered)
-    output_rotated = rotate(ready_to_be_rotated, -30, 30)
+    output_rotated = random_rotate(ready_to_be_rotated, -30, 30)
 
     width, height = output_rotated.size
     x = width/2
@@ -139,7 +139,7 @@ class Preprocessor(threading.Thread):
                             box = coordinates
 
                             # Can we rotate the image?
-			    coordinates_centered, isrotatable, new_box = get_box_centered(original,box[:])
+			    coordinates_centered, isrotatable, new_box = get_box_centered(original, box[:])
                             if isrotatable:
                                 rotated = rotate(original, coordinates_centered, new_box)
                                 # resized now refer to either: randomly rotated, resized image, or resized original image
