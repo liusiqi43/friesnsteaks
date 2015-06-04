@@ -35,6 +35,7 @@ class FOOD100(dense_design_matrix.DenseDesignMatrix):
         print '...nclasses = %d' % (self.nclasses)
 
         self.label_names = reclassified.keys()
+        sort(self.label_names)
         print '...label_names: \n%s' % self.label_names
         label_names_pkl = open(os.path.join( \
             string_utils.preprocess('${PYLEARN2_DATA_PATH}'), \
