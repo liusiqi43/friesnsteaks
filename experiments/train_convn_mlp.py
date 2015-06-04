@@ -29,7 +29,7 @@ hyper_params = {
     'dim_h3': 1024,
     'dim_h4': 1024,
 
-    'kernel_side_h0': 5,
+    'kernel_side_h0': 3,
     'kernel_side_conv': 3,
 
     'pool_side_conv': 2,
