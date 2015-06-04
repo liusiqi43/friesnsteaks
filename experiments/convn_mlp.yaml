@@ -11,15 +11,14 @@
             num_channels: 3, 
         },
         layers: [ 
-                 !obj:pylearn2.models.mlp.ConvElemwise {
+                 !obj:pylearn2.models.mlp.ConvRectifiedLinear {
                      layer_name: 'h0',
                      output_channels: %(output_channels_h0)i,
                      irange: %(irange)f,
                      max_kernel_norm: %(max_norm)f,
                      kernel_shape: [%(kernel_side_h0)i, %(kernel_side_h0)i],
-                     nonlinearity: !obj:pylearn2.models.mlp.SigmoidConvNonlinearity {},
                  },
-                 !obj:pylearn2.models.mlp.ConvElemwise {
+                 !obj:pylearn2.models.mlp.ConvRectifiedLinear {
                      layer_name: 'h1',
                      output_channels: %(output_channels_h1)i,
                      irange: %(irange)f,
@@ -28,9 +27,8 @@
                      pool_type: 'max',
                      pool_shape: [%(pool_side_conv)i, %(pool_side_conv)i],
                      pool_stride: [%(pool_stride_conv)i, %(pool_stride_conv)i],
-                     nonlinearity: !obj:pylearn2.models.mlp.SigmoidConvNonlinearity {},
                  },
-                 !obj:pylearn2.models.mlp.ConvElemwise {
+                 !obj:pylearn2.models.mlp.ConvRectifiedLinear {
                      layer_name: 'h2',
                      output_channels: %(output_channels_h2)i,
                      irange: %(irange)f,
@@ -39,9 +37,8 @@
                      pool_type: 'max',
                      pool_shape: [%(pool_side_conv)i, %(pool_side_conv)i],
                      pool_stride: [%(pool_stride_conv)i, %(pool_stride_conv)i],
-                     nonlinearity: !obj:pylearn2.models.mlp.SigmoidConvNonlinearity {},
                  },
-                 !obj:pylearn2.models.mlp.ConvElemwise {
+                 !obj:pylearn2.models.mlp.ConvRectifiedLinear {
                      layer_name: 'h3',
                      output_channels: %(output_channels_h3)i,
                      irange: %(irange)f,
@@ -50,7 +47,6 @@
                      pool_type: 'max',
                      pool_shape: [%(pool_side_conv)i, %(pool_side_conv)i],
                      pool_stride: [%(pool_stride_conv)i, %(pool_stride_conv)i],
-                     nonlinearity: !obj:pylearn2.models.mlp.SigmoidConvNonlinearity {},
                  },
                  !obj:pylearn2.models.mlp.RectifiedLinear {
                      layer_name: 'h4',
