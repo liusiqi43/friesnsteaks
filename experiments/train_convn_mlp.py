@@ -10,11 +10,11 @@ model_desc = '#Architecture inspired by stanford guide with dropout\n'
 
 hyper_params = {
     'axes': '["b", 0, 1, "c"]',
-    'batch_size' : 32,
+    'batch_size' : 50,
     'input_size': 32,
     'nb_classes' : 63,
 
-    'learning_rate' : .005,
+    'learning_rate' : .01,
     'lr_decay_factor': .1,
 
     'init_momentum' : .5,
@@ -22,22 +22,21 @@ hyper_params = {
     'save_path' : os.path.join(__location__, 'model_%s_live.pkl' % model),
     'save_path_best' : os.path.join(__location__, 'model_%s_best.pkl' % model),
 
-    'output_channels_h0': 128,
-    'output_channels_h1': 256,
-    'output_channels_h2': 512,
+    'output_channels_h0': 32,
+    'output_channels_h1': 64,
 
-    'dim_h3': 1024,
-    'dim_h4': 1024,
+    'dim_h2': 200,
+    'dim_h3': 200,
 
-    'kernel_side_h0': 3,
-    'kernel_side_conv': 3,
+    'kernel_side_h0': 8,
+    'kernel_side_conv': 8,
 
-    'pool_side_conv': 2,
+    'pool_side_conv': 4,
     'pool_stride_conv': 2,
 
     'max_norm': 1.9365,
 
-    'irange': .3,
+    'irange': .05,
 
     'weight_decay': .005,
 }

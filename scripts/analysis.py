@@ -16,7 +16,7 @@ np.set_printoptions(threshold=np.nan)
 
 def get_model_function(model_path):
     model = serial.load(model_path)
-    print model
+    # print model
     X = model.get_input_space().make_theano_batch()
     Y = model.fprop(X)
     return theano.function([X], Y)
@@ -37,42 +37,25 @@ def get_np_imgs(img_paths, imageShape, id_to_class, class_to_superclass, class_t
 
     return data, ytrue
 
-if __name__ == '__main__':
+def is_included(img, class_to_superclass, id_to_class):
+    return class_to_superclass.has_key(id_to_class[int(os.path.basename(img).split('_')[1])])
 
-    if len(sys.argv) < 4:
-        print 'Usage: analysis.py <path/to/model.pkl> <path/to/images> <number of batches>'
-        sys.exit(-1)
-
-    f = get_model_function(sys.argv[1])
-    # 'data/food100/output_resized_64/img_61_*.jpg'
-    datapath = sys.argv[2]
-    batch = int(sys.argv[3])
-
-
-    class_to_id = get_classes()
-    id_to_class = {v: k for k, v in class_to_id.items()}
-    class_to_superclass = get_mapping()
-
-    label_names_pkl_path = os.path.join(string_utils.preprocess('${PYLEARN2_DATA_PATH}'), 'food100', 'label_names.pkl')
-    label_names_pkl = open(label_names_pkl_path, 'rb')
-    label_names = pickle.load(label_names_pkl)
-    class_to_label = {l : i for i, l in enumerate(label_names)}
-    label_names_pkl.close()
-
-    print 'Loading from: %s' % datapath
-    result = np.zeros((len(label_names), len(label_names)), dtype=float)
-    print 'result matrix size: %s' % str(result.shape)
-    test_set = [img for img in glob(datapath) if class_to_superclass.has_key(id_to_class[int(os.path.basename(img).split('_')[1])])]
-
+def get_confusion_matrix(n_classes, id_to_class, class_to_superclass, class_to_label, test_set, model_path, batch):
+    result = np.zeros((n_classes, n_classes), dtype=float)
     imageShape = get_np_img(test_set[0]).shape
     batch_size = len(test_set)/batch
+
+    f = get_model_function(model_path)
+    print 'processing %d batches ' % batch,
     for i in xrange(batch):
-        print 'processing batch #%d' % i
-        images, ytrue = get_np_imgs(test_set[i*batch_size:(i+1)*batch_size], imageShape, id_to_class, class_to_superclass, class_to_label)
+        print '.',
+        images, ytrue = get_np_imgs(test_set[i*batch_size:(i+1)*batch_size], imageShape, \
+                                    id_to_class, class_to_superclass, class_to_label)
         res = f(images)
         ypred = np.argmax(res, axis=1)
-        cm = confusion_matrix(ytrue, ypred, range(len(label_names))).astype(float)
+        cm = confusion_matrix(ytrue, ypred, range(n_classes)).astype(float)
         result += cm
+    print '.'
 
     # column major normalization.
     #         ytrue
@@ -82,14 +65,15 @@ if __name__ == '__main__':
     #       |        |
     #       ----------
 
-    result /= np.sum(result, axis=0)
+    return result
 
-    fig, ax = plt.subplots()
-    im = ax.imshow(result, cmap=plt.get_cmap('jet'), interpolation='nearest', vmin=0, vmax=1)
-    fig.colorbar(im)
+def get_misclass(confusion_matrix):
+    total = np.sum(confusion_matrix)
+    correct = float(np.sum(confusion_matrix.diagonal()))
+    return 1. - correct/total
 
-    # keep a copy of current labelnames
-    label_names_path = sys.argv[1].split('.')[-2]+'_labelname.csv'
+def save_report(model_path, result, label_names):
+    label_names_path = model_path.split('.')[-2]+'_labelname.csv'
     with open(label_names_path, 'wb') as csvfile:
         writer = csv.writer(csvfile, delimiter=',',
                                 quotechar='|', quoting=csv.QUOTE_MINIMAL)
@@ -97,7 +81,7 @@ if __name__ == '__main__':
         for i, label in enumerate(label_names):
             writer.writerow([i, label])
 
-    worst_classes_path = sys.argv[1].split('.')[-2]+'_worstclasses.csv'
+    worst_classes_path = model_path.split('.')[-2]+'_worstclasses.csv'
     with open(worst_classes_path, 'wb') as csvfile:
         k = 5
         writer = csv.writer(csvfile, delimiter=',',
@@ -113,6 +97,40 @@ if __name__ == '__main__':
             row = ['%s:%.2f' % (label_names[c], result[c, cls]) for c in row]
             writer.writerow(row)
 
+def main():
+    if len(sys.argv) < 4:
+        print 'Usage: analysis.py <path/to/model.pkl> <path/to/images> <number of batches>'
+        sys.exit(-1)
+
+    # 'data/food100/output_resized_64/img_61_*.jpg'
+    model_path = sys.argv[1]
+    datapath = sys.argv[2]
+    batch = int(sys.argv[3])
+
+
+    class_to_id = get_classes()
+    id_to_class = {v: k for k, v in class_to_id.items()}
+    class_to_superclass = get_mapping()
+
+    label_names_pkl_path = os.path.join(string_utils.preprocess('${PYLEARN2_DATA_PATH}'), 'food100', 'label_names.pkl')
+    label_names_pkl = open(label_names_pkl_path, 'rb')
+    label_names = pickle.load(label_names_pkl)
+    class_to_label = {l : i for i, l in enumerate(label_names)}
+    label_names_pkl.close()
+
+    print 'Loading from: %s' % datapath
+    test_set = [img for img in glob(datapath) if is_included(img, class_to_superclass, id_to_class)]
+
+    result = get_confusion_matrix(len(label_names), id_to_class, class_to_superclass, \
+                                  class_to_label, test_set, model_path, batch)
+    print 'misclass rate: %f' % get_misclass(result)
+    print 'result matrix size: %s' % str(result.shape)
+    result /= np.sum(result, axis=0)
+
+    fig, ax = plt.subplots()
+    im = ax.imshow(result, cmap=plt.get_cmap('jet'), interpolation='nearest', vmin=0, vmax=1)
+    fig.colorbar(im)
+
     # plot and visualize the confusion matrix.
     plt.xlabel('groud truth y')
     plt.ylabel('predicted y')
@@ -120,3 +138,9 @@ if __name__ == '__main__':
     fname = sys.argv[1].split('.')[-2]+'_confusion_matrix.pdf'
     plt.savefig(os.path.join(fname), bbox_inches='tight')
     plt.show()
+
+    # keep a copy of current labelnames
+    save_report(model_path, result, label_names)
+
+if __name__ == '__main__':
+    main()
